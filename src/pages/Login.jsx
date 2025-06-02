@@ -10,16 +10,15 @@ const Login = () => {
 
 	const [loading, setLoading] = useState(false)
 	const {setView} = useContext(routerContext)
-	const { messageApi, setUserData, setLogged } = useContext(appContext)
+	const { messageApi, setUserData, setLogged, contextHolder } = useContext(appContext)
 
 	const submitLogin = async () => {
-		console.log("login")
 		setLoading(true)
 		const identification = document.getElementById('identification').value
 		const password = document.getElementById('password').value
 
 		const data = {
-			identification: identification,
+			id: identification,
 			passwordHash: await encrypt(password)
 		}
 		let res = await login(data)
@@ -40,6 +39,7 @@ const Login = () => {
 
 	return(
 		<div className='Login'>
+			{contextHolder}
 			<Form disabled={loading} className='loginForm' onFinish={submitLogin}>
 				<h1>Recepcion</h1>
 				<Form.Item name='identification'>
