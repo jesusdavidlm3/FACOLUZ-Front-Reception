@@ -22,7 +22,6 @@ const Login = () => {
 			passwordHash: await encrypt(password)
 		}
 		let res = await login(data)
-		console.log(res)
 		if(res.status == 200){
 			setUserData(res.data)
 			setLogged(true)

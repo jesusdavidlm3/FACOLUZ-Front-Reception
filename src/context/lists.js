@@ -1,3 +1,7 @@
+export function searchOnList(list, id){
+    return list.find(item => item.value == id).label
+}
+
 export const instructionGradeList = [
     {label: 'Ninguno', value: 0},
     {label: 'Prescolar', value: 1},
@@ -72,4 +76,30 @@ export const alimentsList = [
     {label: 'Enfermedades infectocontagiosas', value: 22},
     {label: 'Afecciones O.R.L.', value: 23},
     {label: 'Dificultades de aprendizaje', value: 24},
+]
+
+export const userTypeList = [
+    {label: 'Administrador de sistemas', value: 0},
+    {label: 'Docente', value: 1},
+    {label: 'Estudiante', value: 2},
+    {label: 'Administrador de estudios', value: 3},
+]
+
+export const dateStatus = [
+    {label: 'Pendiente', value: 0},
+    {label: 'Atendida', value: 1},
+    {label: 'Cancelada', value: 2},
+]
+
+export const relationshipType = [
+    {label: 'Madre', value: 0},
+    {label: 'Padre', value: 0},
+    {label: 'Abuelo/a', value: 0},
+    {label: 'Hermano/a', value: 0},
+    {label: 'Nieto/a', value: 0},
+    {label: 'Hijo/a', value: 0},
+    {label: 'Esposo/a', value: 0},
+    {label: 'Tio/a', value: 0},
+    {label: 'Sobrino/a', value: 0},
+    {label: 'Otros', value: 0},
 ]
