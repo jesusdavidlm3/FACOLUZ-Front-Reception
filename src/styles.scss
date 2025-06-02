@@ -229,6 +229,12 @@ body{
 
 .DateList{
 	@include pageBasis;
+
+	.Buttons{
+		display: flex;
+		align-items: center;
+		gap: 5px;
+	}
 }
 
 .NewDate{
