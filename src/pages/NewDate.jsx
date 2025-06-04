@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Divider, Form, Input, Select, DatePicker, Space, Button, TimePicker } from 'antd'
-import { verifyPatientExist } from '../client/client'
+import { makeDate, makeHistory, verifyPatientExist, getStudentList } from '../client/client'
 import AppContext from "antd/es/app/context";
 import * as lists from "../context/lists"
 import { mergeDateTime } from "../functions/formatDateTime";
+import { LoadingOutlined } from "@ant-design/icons"
 
 const NewDate = () => {
 
@@ -11,6 +12,8 @@ const NewDate = () => {
     const { messageApi, contextHolder } = useContext(AppContext)
     const [patientExist, setPatientExists] = useState(null)
     const [patientData, setPatientData] = useState()
+    const [loading, setLoading] = useState(false)
+    const [studentList, setStudentList] = useState([])
 
     //Estados para recoleccion de informacion
     const [sex, setSex] = useState()
@@ -25,6 +28,23 @@ const NewDate = () => {
     const [instructionGrade, setInstructionGrade] = useState()
 
     //Comunicacion back end
+
+    useEffect(() => {
+        getList()
+    }, [])
+
+    const getList = async() => {
+        const res = await getStudentList()
+        if(res.status == 200){
+            setStudentList(res.data.map(item => ({label: `${item.name} ${item.lastname}`, value: item.id})))
+        }else{
+            messageApi.open({
+                type: 'error',
+                content: 'error al obtener la lista de doctores'
+            })
+        }
+    }
+
     const verifyPatient = async(e) => {
         const res = await verifyPatientExist(e)
         console.log(res)
@@ -41,12 +61,13 @@ const NewDate = () => {
         }
     }
 
-    const saveDate = () => {
+    const saveDate = async() => {
+        // setLoading(true)
         if(patientExist == true){
             const data = {
                 patientId: patientData.id,
                 doctorId: doctorId,
-                // date: 
+                date: mergeDateTime(date, time)
             }
         }else if(patientExist == false){
             const id = document.getElementById("idField").value
@@ -63,7 +84,7 @@ const NewDate = () => {
             const companionName = document.getElementById("companionNameField").value
             const companionPhone = document.getElementById("companionPhoneField").value
 
-            const data = {
+            const historyData = {
                 name: name,
                 lastname: lastname,
                 identificationType: idType,
@@ -84,18 +105,46 @@ const NewDate = () => {
                 companionPhone: companionPhone,
                 companionRelationship: companionRelation,
                 instructionGrade: instructionGrade,
-                date: mergeDateTime(date, time),
-                doctorId: doctorId
             }
 
-            console.log(data)
+            const dateData = {
+                patientId: id,
+                doctorId: doctorId,
+                date: mergeDateTime(date, time)
+            }
+
+            const historyRes = await makeHistory(historyData)
+            if(historyRes.status == 200){
+                messageApi.open({
+                    type: 'success',
+                    content: "Paciente registrado"
+                })
+                const dateRes = await makeDate(dateData)
+                if(dateRes.status == 200){
+                    messageApi.open({
+                        type: 'success',
+                        content: "Cita registrada"
+                    })
+                }else{
+                    messageApi.open({
+                        type: 'error',
+                        content: dateRes.response.data ? (dateRes.response.data):("error al registrar la cita")
+                    })
+                }
+            }else{
+                messageApi.open({
+                    type: 'error',
+                    content: historyRes.response.data ? (historyRes.response.data):("error al registrar al paciente")
+                })
+            }
         }
     }
 
     return(
         <div className="NewDate">
+            {contextHolder}
             <Divider>Agendar cita</Divider>
-            <Form style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Form style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} disabled={loading}>
                 <Form.Item label="Cedula del Paciente">
                     <Input.Search onSearch={e => verifyPatient(e)} id="idField"/>
                 </Form.Item>
@@ -212,8 +261,9 @@ const NewDate = () => {
                     <Space>
                         <Form.Item label="Doctor:">
                             <Select
-                                style={{width: '150px'}}
+                                style={{width: '250px'}}
                                 onChange={e=>setDoctorId(e)}
+                                options={studentList}
                             />
                         </Form.Item>
                         <Form.Item label="Fecha:">
@@ -231,7 +281,7 @@ const NewDate = () => {
                         </Form.Item>
                     </Space>
 
-                    <Button htmlType="submit" variant="solid" color="primary" onClick={saveDate}>Registrar</Button>
+                    <Button htmlType="submit" variant="solid" color="primary" onClick={saveDate}>Registrar{loading && <LoadingOutlined/>}</Button>
                 </>)}
 
             </Form>
