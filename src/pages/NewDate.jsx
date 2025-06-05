@@ -105,6 +105,7 @@ const NewDate = () => {
                 companionPhone: companionPhone,
                 companionRelationship: companionRelation,
                 instructionGrade: instructionGrade,
+                idStudent: doctorId
             }
 
             const dateData = {
