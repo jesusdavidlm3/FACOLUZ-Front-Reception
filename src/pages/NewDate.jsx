@@ -1,15 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Divider, Form, Input, Select, DatePicker, Space, Button, TimePicker } from 'antd'
 import { makeDate, makeHistory, verifyPatientExist, getStudentList } from '../client/client'
-import AppContext from "antd/es/app/context";
+import { appContext } from '../context/appContext'
 import * as lists from "../context/lists"
-import { mergeDateTime } from "../functions/formatDateTime";
+import { mergeDateTime, getAge } from "../functions/formatDateTime";
 import { LoadingOutlined } from "@ant-design/icons"
 
 const NewDate = () => {
 
     //Estados para manejo de la UI
-    const { messageApi, contextHolder } = useContext(AppContext)
+    const { messageApi, contextHolder } = useContext(appContext)
     const [patientExist, setPatientExists] = useState(null)
     const [patientData, setPatientData] = useState()
     const [loading, setLoading] = useState(false)
@@ -28,7 +28,6 @@ const NewDate = () => {
     const [instructionGrade, setInstructionGrade] = useState()
 
     //Comunicacion back end
-
     useEffect(() => {
         getList()
     }, [])
@@ -50,19 +49,20 @@ const NewDate = () => {
         console.log(res)
         if(res.status == 200){
             setPatientExists(true)
+            setPatientData(res.data[0])
         }else if(res.status == 404){
             setPatientExists(false)
         }else{
             console.log(res)
             messageApi.open({
                 type: "error",
-                content: res.response.data
+                content: "ah ocurrido un error"
             })
         }
     }
 
     const saveDate = async() => {
-        // setLoading(true)
+        setLoading(true)
         if(patientExist == true){
             const data = {
                 patientId: patientData.id,
@@ -108,11 +108,7 @@ const NewDate = () => {
                 idStudent: doctorId
             }
 
-            const dateData = {
-                patientId: id,
-                doctorId: doctorId,
-                date: mergeDateTime(date, time)
-            }
+            console.log(historyData)
 
             const historyRes = await makeHistory(historyData)
             if(historyRes.status == 200){
@@ -120,22 +116,30 @@ const NewDate = () => {
                     type: 'success',
                     content: "Paciente registrado"
                 })
+                const dateData = {
+                    patientId: historyRes.data.uuid,
+                    doctorId: doctorId,
+                    date: mergeDateTime(date, time)
+                }
+                console.log(dateData)
                 const dateRes = await makeDate(dateData)
                 if(dateRes.status == 200){
                     messageApi.open({
                         type: 'success',
                         content: "Cita registrada"
                     })
+                    setLoading(false)
+                    setPatientExists(null)
                 }else{
                     messageApi.open({
                         type: 'error',
-                        content: dateRes.response.data ? (dateRes.response.data):("error al registrar la cita")
+                        content: "error al registrar la cita"
                     })
                 }
             }else{
                 messageApi.open({
                     type: 'error',
-                    content: historyRes.response.data ? (historyRes.response.data):("error al registrar al paciente")
+                    content: "error al registrar al paciente"
                 })
             }
         }
@@ -251,8 +255,9 @@ const NewDate = () => {
 
                 </>)}
                 {(patientExist != null && patientExist == true) && (<>
-                    <h3>Nombre: </h3>
-                    <h3>Edad: </h3>
+                    <h3>Nombre: {`${patientData.name} ${patientData.lastname}`}</h3>
+                    <h3>Acompanante habitual: {patientData.companionName}</h3>
+                    <h3>Edad: {getAge(patientData.birthDate)}</h3>
 
                 </>)}
 

@@ -12,3 +12,11 @@ export function mergeDateTime(rawDate, rawTime){
     const res = `${year}-${month}-${day} ${hour}:${minutes}:00`
     return res
 }
+
+export function getAge(date){
+    const year = new Date(date).getFullYear()
+    const currentDate = new Date(Date.now())
+    const currentYear = currentDate.getFullYear()
+
+    return(currentYear-year)
+}
