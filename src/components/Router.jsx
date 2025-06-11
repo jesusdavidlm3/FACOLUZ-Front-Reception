@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Home from "../pages/Home";
 import DateList from "../pages/DateList";
 import NewDate from "../pages/NewDate";
+import UnderAgeRegister from "../pages/UnderAgeRegister";
 
 const Router = () => {
 
@@ -16,6 +17,7 @@ const Router = () => {
             case "Login": return <Login/>
             case "DateList": return <DateList/>
             case "NewDate": return <NewDate/>
+            case "UnderAgeRegister": return <UnderAgeRegister/>
             default: return <ErrorPage/>
         }
     } catch (err) {

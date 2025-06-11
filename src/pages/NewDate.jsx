@@ -1,14 +1,17 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Divider, Form, Input, Select, DatePicker, Space, Button, TimePicker } from 'antd'
+import { Divider, Form, Input, Select, DatePicker, Space, Button, TimePicker, InputNumber } from 'antd'
 import { makeDate, makeHistory, verifyPatientExist, getStudentList } from '../client/client'
 import { appContext } from '../context/appContext'
 import * as lists from "../context/lists"
 import { mergeDateTime, getAge } from "../functions/formatDateTime";
 import { LoadingOutlined } from "@ant-design/icons"
+import { routerContext } from "../context/routerContext";
+import InputPhone from '../components/InputPhone'
 
 const NewDate = () => {
 
     //Estados para manejo de la UI
+    const {setView} = useContext(routerContext)
     const { messageApi, contextHolder } = useContext(appContext)
     const [patientExist, setPatientExists] = useState(null)
     const [patientData, setPatientData] = useState()
@@ -23,9 +26,13 @@ const NewDate = () => {
     const [doctorId, setDoctorId] = useState()
     const [idType, setIdType] = useState()
     const [race, setRace] = useState()
+    const [ethnicity, setEthnicity] = useState(null)
     const [emergencyRelation, setEmergencyRelation] = useState()
     const [companionRelation, setCompanionRelation] = useState()
     const [instructionGrade, setInstructionGrade] = useState()
+    const [phone, setPhone] = useState()
+    const [companionPhone, setCompanionPhone] = useState()
+    const [emergencyPhone, setEmergencyPhone] = useState()
 
     //Comunicacion back end
     useEffect(() => {
@@ -74,15 +81,13 @@ const NewDate = () => {
             const name = document.getElementById("nameField").value
             const lastname = document.getElementById("lastnameField").value
             const birthPlace = document.getElementById("birthPlaceField").value
-            const phone = document.getElementById("phoneField").value
+            const state = document.getElementById("addressState").value
             const municipality = document.getElementById("phoneField").value
             const city = document.getElementById("cityField").value
             const address = document.getElementById("addressField").value
             const religion = document.getElementById("religionField").value
             const emergencyName = document.getElementById("emergencyNameField").value
-            const emergencyPhone = document.getElementById("emergencyPhoneField").value
             const companionName = document.getElementById("companionNameField").value
-            const companionPhone = document.getElementById("companionPhoneField").value
 
             const historyData = {
                 name: name,
@@ -95,7 +100,9 @@ const NewDate = () => {
                 birthPlace: birthPlace,
                 religion: religion,
                 race: race,
+                ethnicity: ethnicity,
                 address: address,
+                addressState: state,
                 addressMunicipality: municipality,
                 addressCity: city,
                 emergencyName: emergencyName,
@@ -150,9 +157,12 @@ const NewDate = () => {
             {contextHolder}
             <Divider>Agendar cita</Divider>
             <Form style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} disabled={loading}>
-                <Form.Item label="Cedula del Paciente">
-                    <Input.Search onSearch={e => verifyPatient(e)} id="idField"/>
-                </Form.Item>
+                <Space>
+                    <Form.Item label="Cedula o codigo de Paciente">
+                        <Input.Search onSearch={e => verifyPatient(e)} id="idField"/>
+                    </Form.Item>
+                    <Button onClick={()=>setView("UnderAgeRegister")} variant="solid" color="primary">Registrar menor de edad</Button>
+                </Space>
                 {(patientExist != null && patientExist == false) && (<>
                     <h4 style={{color: 'tomato'}}>No se ha encontrado ningun paciente con esta cedula o codigo, registre al paciente</h4>
                     <Divider>Datos del paciente</Divider>
@@ -192,9 +202,9 @@ const NewDate = () => {
                                 onChange={e=>setRace(e)}    
                             />
                         </Form.Item>
-                        <Form.Item label="Religion (opcional):">
-                            <Input id="religionField"/>
-                        </Form.Item>
+                        { race == 4 && <Form.Item label="Etnia">
+                            <Select options={lists.ethnicityList} style={{width: '150px'}} onChange={e=>setEthnicity(e)}/>
+                        </Form.Item> }
                         <Form.Item label="Grado de instruccion:">
                             <Select
                                 style={{width: '150px'}}
@@ -205,15 +215,23 @@ const NewDate = () => {
                     </Space>
                     <Space>
                         <Form.Item label="Telefono">
-                            <Input id="phoneField" />
+                            <InputPhone setter={setPhone}/>
                         </Form.Item>
                         <Form.Item label="Lugar de nacimiento">
                             <Input id="birthPlaceField"/>
                         </Form.Item>
-                        <Form.Item label="Municipio">
+                        <Form.Item label='Numero de hijo:'>
+                            <InputNumber id='childPositionField' controls={false}/>
+                        </Form.Item>
+                    </Space>
+                    <Space>
+                        <Form.Item label="Estado:">
+                            <Input id="stateField" />
+                        </Form.Item>
+                        <Form.Item label="Municipio:">
                             <Input id="municipalityField" />
                         </Form.Item>
-                        <Form.Item label="Ciudad">
+                        <Form.Item label="Ciudad:">
                             <Input id="cityField" />
                         </Form.Item>
                     </Space>
@@ -226,7 +244,7 @@ const NewDate = () => {
                             <Input id="emergencyNameField"/>
                         </Form.Item>
                         <Form.Item label="Telefono">
-                            <Input id="emergencyPhoneField"/>
+                            <InputPhone setter={setEmergencyPhone} />
                         </Form.Item>
                         <Form.Item label="Relacion">
                             <Select
@@ -242,7 +260,7 @@ const NewDate = () => {
                             <Input id="companionNameField"/>
                         </Form.Item>
                         <Form.Item label="Telefono (Opcional)">
-                            <Input id="companionPhoneField"/>
+                            <InputPhone setter={setCompanionPhone}/>
                         </Form.Item>
                         <Form.Item label="Relacion (Opcional)">
                             <Select
