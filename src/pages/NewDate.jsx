@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Divider, Form, Input, Select, DatePicker, Space, Button, TimePicker, InputNumber } from 'antd'
-import { makeDate, makeHistory, verifyPatientExist, getStudentList } from '../client/client'
+import { makeDate, makeAdultHistory, verifyPatientExist, getStudentList } from '../client/client'
 import { appContext } from '../context/appContext'
 import * as lists from "../context/lists"
 import { mergeDateTime, getAge } from "../functions/formatDateTime";
@@ -76,48 +76,61 @@ const NewDate = () => {
                 doctorId: doctorId,
                 date: mergeDateTime(date, time)
             }
+
+            const res = await makeDate(data)
+            if(dateRes.status == 200){
+                messageApi.open({
+                    type: 'success',
+                    content: "Cita registrada"
+                })
+                setLoading(false)
+                setPatientExists(null)
+            }else{
+                messageApi.open({
+                    type: 'error',
+                    content: "error al registrar la cita"
+                })
+            }
         }else if(patientExist == false){
             const id = document.getElementById("idField").value
             const name = document.getElementById("nameField").value
             const lastname = document.getElementById("lastnameField").value
             const birthPlace = document.getElementById("birthPlaceField").value
+            const childPosition = document.getElementById("childPositionField").value
             const state = document.getElementById("addressState").value
             const municipality = document.getElementById("phoneField").value
             const city = document.getElementById("cityField").value
             const address = document.getElementById("addressField").value
-            const religion = document.getElementById("religionField").value
             const emergencyName = document.getElementById("emergencyNameField").value
             const companionName = document.getElementById("companionNameField").value
 
             const historyData = {
+                patientIdentification: id,
                 name: name,
                 lastname: lastname,
                 identificationType: idType,
-                patientIdentification: id,
-                phone: phone,
-                sex: sex,
                 birthDate: birthDate.$d,
-                birthPlace: birthPlace,
-                religion: religion,
+                sex: sex,
                 race: race,
+                instructionGrade: instructionGrade,
+                phone: phone,
+                birthPlace: birthPlace,
+                childPosition: childPosition,
                 ethnicity: ethnicity,
-                address: address,
                 addressState: state,
                 addressMunicipality: municipality,
                 addressCity: city,
+                address: address,
                 emergencyName: emergencyName,
                 emergencyPhone: emergencyPhone,
                 emergencyRelationship: emergencyRelation,
                 companionName: companionName,
                 companionPhone: companionPhone,
                 companionRelationship: companionRelation,
-                instructionGrade: instructionGrade,
                 idStudent: doctorId
             }
 
-            console.log(historyData)
-
-            const historyRes = await makeHistory(historyData)
+            const historyRes = await makeAdultHistory(historyData)
             if(historyRes.status == 200){
                 messageApi.open({
                     type: 'success',

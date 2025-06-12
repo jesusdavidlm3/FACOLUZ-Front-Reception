@@ -16,8 +16,13 @@ export async function verifyPatientExist(patientId) {
 	return res
 }
 
-export async function makeHistory(data) {
-	const res = await http.post('api/makeHistory', token, data)
+export async function makeAdultHistory(data) {
+	const res = await http.post('api/makeAdultHistory', token, data)
+	return res
+}
+
+export async function makeChildHistory(data) {
+	const res = await http.post('api/makeChildHistory', token, data)
 	return res
 }
 

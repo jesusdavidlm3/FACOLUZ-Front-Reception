@@ -17,6 +17,7 @@ const UnderAgeRegister = () => {
     const [sex, setSex] = useState()
     const [race, setRace] = useState()
     const [ethnicity, setEthnicity] = useState(null)
+    const [currentStudying, setCurrentStudying] = useState()
     const [instructionGrade, setInstructionGrade] = useState()
     const [emergenciRelationship, setEmergencyRelationship] = useState()
     const [companionRelationship, setCompanionRelationship] = useState()
@@ -24,6 +25,12 @@ const UnderAgeRegister = () => {
     const [date, setDate] = useState()
     const [time, setTime] = useState()
     const [representativeWorking, setRepresentativeWorking] = useState()
+    const [representativeInstructionGrade, setRepresentativeInstructionGrade] = useState()
+    const [homeOwnership, setHomeOwnership] = useState()
+    const [companionPhone, setCompanionPhone] = useState()
+    const [emergencyPhone, setEmergencyPhone] = useState()
+    const [representativePhone, setRepresentativePhone] = useState()
+    const [representativeWorkPhone, setRepresentativeWorkPhone] = useState()
 
     //Comunicacion back end
     useEffect(() => {
@@ -44,6 +51,59 @@ const UnderAgeRegister = () => {
 
     const send = async() => {
 
+        const name = document.getElementById("nameField").value
+        const lastname = document.getElementById("lastnameField").value
+        const childPosition = document.getElementById("childPositionField").value
+        const addressState = document.getElementById("addressStateField").value
+        const addressMunicipality = document.getElementById("addressMunicipalityField").value
+        const addressCity = document.getElementById("addressCityField").value
+        const birthPlace = document.getElementById("birthPlaceField").value
+        const address = document.getElementById("addressField").value
+        const companionName = document.getElementById("companionNameField").value
+        const emergencyName = document.getElementById("emergencyNameField").value
+        const representativeName = document.getElementById("representativeNameField").value
+        const representativeId = document.getElementById("representativeIdField").value
+        const representativeWorkType = document.getElementById("representativeWorkTypeField").value
+        const representativeWorkAddress = document.getElementById("representativeWorkAddressField").value
+        const representativeFamilyBurden = document.getElementById("representativeFamilyBurdenField").value
+        const numberOfRooms = document.getElementById("numberOfRoomsField").value
+
+        const data = {
+            name: name,
+            lastname: lastname,
+            birthDate: birthDate,
+            childPosition: childPosition,
+            sex: sex,
+            race: race,
+            ethnicity: ethnicity,
+            instructionGrade: instructionGrade,
+            currentStudying: currentStudying,
+            addressState: addressState,
+            addressMunicipality: addressMunicipality,
+            addressCity: addressCity,
+            birthPlace: birthPlace,
+            address: address,
+            companionName: companionName,
+            companionPhone: companionPhone,
+            companionRelationship: companionRelationship,
+            emergencyName: emergencyName,
+            emergencyPhone: emergencyPhone,
+            emergencyRelationship: emergenciRelationship,
+            representativeName: representativeName,
+            representativeId: representativeId,
+            representativeInstructionGrade: representativeInstructionGrade,
+            representativePhone: representativePhone,
+            representativeWorking: representativeWorking,
+            representativeWorkType: representativeWorkType,
+            representativeWorkAddress: representativeWorkAddress,
+            representativeWorkPhone: representativeWorkPhone,
+            // representativeWorkEntry: ,
+            // representativeWorkLeaving: string,
+            representativeFamilyBurden: representativeFamilyBurden,
+            homeOwnership: homeOwnership,
+            numberOfRooms: numberOfRooms,
+            idStudent: doctorId,
+        }
     }
 
     return(
@@ -79,18 +139,21 @@ const UnderAgeRegister = () => {
                         <Select options={lists.instructionGradeList.slice(0,4)} onChange={e=>setInstructionGrade(e)} style={{width: '150px'}}/>
                     </Form.Item>
                     <Form.Item label="Estudia actualmente:">
-                        <Select options={lists.listOfThree.slice(0,2)} style={{width: '80px'}}/>
+                        <Select options={lists.listOfThree.slice(0,2)} style={{width: '80px'}} onChange={e=>setCurrentStudying(e)}/>
                     </Form.Item>
                 </Space>
                 <Space>
                     <Form.Item label='Estado:'>
-                        <Input id='stateField'/>
+                        <Input id='addressStateField'/>
                     </Form.Item>
                     <Form.Item label='Municipio:'>
-                        <Input id='municipalityField'/>
+                        <Input id='addressMunicipalityField'/>
                     </Form.Item>
                     <Form.Item label='Ciudad:'>
-                        <Input id='cityField'/>
+                        <Input id='addressCityField'/>
+                    </Form.Item>
+                    <Form.Item label='Lugar de nacimiento:'>
+                        <Input id='birthPlaceField'/>
                     </Form.Item>
                 </Space>
                 <Form.Item label='Direccion' layout='vertical'>
@@ -102,7 +165,7 @@ const UnderAgeRegister = () => {
                         <Input id='companionNameField'/>
                     </Form.Item>
                     <Form.Item label='Telefono:'>
-                        <InputPhone />
+                        <InputPhone setter={setCompanionPhone}/>
                     </Form.Item>
                     <Form.Item label='Relacion:'>
                         <Select options={lists.relationshipType} style={{width: '150px'}} onChange={e=>setCompanionRelationship(e)}/>
@@ -114,7 +177,7 @@ const UnderAgeRegister = () => {
                         <Input id='emergencyNameField'/>
                     </Form.Item>
                     <Form.Item label='Telefono:'>
-                        <InputPhone/>
+                        <InputPhone setter={setEmergencyPhone}/>
                     </Form.Item>
                     <Form.Item label='Relacion:'>
                         <Select options={lists.relationshipType} style={{width: '150px'}} onChange={e=>setEmergencyRelationship(e)}/>
@@ -129,10 +192,10 @@ const UnderAgeRegister = () => {
                         <InputNumber controls={false} id='representativeIdField'/>
                     </Form.Item>
                     <Form.Item label='Telefono'>
-                        <InputPhone/>
+                        <InputPhone setter={setRepresentativePhone}/>
                     </Form.Item>
                     <Form.Item label='Grado de instruccion:'>
-                        <Select options={lists.instructionGradeList} style={{width: '150px'}}/>
+                        <Select options={lists.instructionGradeList} style={{width: '150px'}} onChange={e=>setRepresentativeInstructionGrade(e)}/>
                     </Form.Item>
                 </Space>
                 <Space>
@@ -144,15 +207,14 @@ const UnderAgeRegister = () => {
                     </Form.Item>
                     { representativeWorking == 1 &&
                         <Form.Item label="Ocupacion">
-                            <Input id='workTypeField'/>
+                            <Input id='representativeWorkTypeField'/>
                         </Form.Item>
                     }
-                    
                 </Space>
                 { representativeWorking == 1 && <>
                     <Space>
                         <Form.Item label='Telefono del trabajo:'>
-                            <InputPhone />
+                            <InputPhone setter={setRepresentativeInstructionGrade}/>
                         </Form.Item>
                         <Form.Item label='Horario de trabajo:'>
                             <TimePicker.RangePicker                             
@@ -162,16 +224,23 @@ const UnderAgeRegister = () => {
                         </Form.Item>
                     </Space>
                     <Form.Item label='Direccion de trabajo:' layout='vertical'>
-                        <Input.TextArea id='workAddressField' style={{width: '50vw'}} autoSize/>
+                        <Input.TextArea id='representativeWorkAddressField' style={{width: '50vw'}} autoSize/>
                     </Form.Item>
                 </> }
                 <Divider>Vivienda</Divider>
                 <Space>
                     <Form.Item label='Tipo de vivienda:'>
-                        <Select options={lists.homeOwnership} style={{width: '150px'}}/>
+                        <Select
+                            options={lists.homeOwnership}
+                            style={{width: '150px'}}
+                            onChange={e=>setHomeOwnership(e)}
+                        />
                     </Form.Item>
                     <Form.Item label='Numero de habitaciones:'>
-                        <InputNumber/>
+                        <InputNumber controls={false} id='numberOfRoomsField'/>
+                    </Form.Item>
+                    <Form.Item label='Cargar familiar:'>
+                        <InputNumber controls={false} id='representativeFamilyBurdenField'/>
                     </Form.Item>
                 </Space>
                 <Divider>Datos de la cita</Divider>
