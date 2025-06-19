@@ -33,6 +33,8 @@ const NewDate = () => {
     const [phone, setPhone] = useState()
     const [companionPhone, setCompanionPhone] = useState()
     const [emergencyPhone, setEmergencyPhone] = useState()
+    const [currentWorking, setCurrentWorking] = useState(false)
+    const [homeOwnership, setHomeOwnership] = useState()
 
     //Comunicacion back end
     useEffect(() => {
@@ -86,80 +88,100 @@ const NewDate = () => {
                 setLoading(false)
                 setPatientExists(null)
             }else{
+                setLoading(false)
                 messageApi.open({
                     type: 'error',
                     content: "error al registrar la cita"
                 })
             }
         }else if(patientExist == false){
-            const id = document.getElementById("idField").value
-            const name = document.getElementById("nameField").value
-            const lastname = document.getElementById("lastnameField").value
-            const birthPlace = document.getElementById("birthPlaceField").value
-            const childPosition = document.getElementById("childPositionField").value
-            const state = document.getElementById("addressState").value
-            const municipality = document.getElementById("phoneField").value
-            const city = document.getElementById("cityField").value
-            const address = document.getElementById("addressField").value
-            const emergencyName = document.getElementById("emergencyNameField").value
-            const companionName = document.getElementById("companionNameField").value
+            try{
+                const id = document.getElementById("idField").value
+                const name = document.getElementById("nameField").value
+                const lastname = document.getElementById("lastnameField").value
+                const birthPlace = document.getElementById("birthPlaceField").value
+                const childPosition = document.getElementById("childPositionField").value
+                const state = document.getElementById("addressStateField").value
+                const municipality = document.getElementById("addressMunicipalityField").value
+                const city = document.getElementById("addressCityField").value
+                const address = document.getElementById("addressField").value
+                const emergencyName = document.getElementById("emergencyNameField").value
+                const companionName = document.getElementById("companionNameField").value
+                let workType = currentWorking == 1 ? (document.getElementById("workTypeField").value):(null)
+                const familyBurden = document.getElementById("familyBurdenField").value
 
-            const historyData = {
-                patientIdentification: id,
-                name: name,
-                lastname: lastname,
-                identificationType: idType,
-                birthDate: birthDate.$d,
-                sex: sex,
-                race: race,
-                instructionGrade: instructionGrade,
-                phone: phone,
-                birthPlace: birthPlace,
-                childPosition: childPosition,
-                ethnicity: ethnicity,
-                addressState: state,
-                addressMunicipality: municipality,
-                addressCity: city,
-                address: address,
-                emergencyName: emergencyName,
-                emergencyPhone: emergencyPhone,
-                emergencyRelationship: emergencyRelation,
-                companionName: companionName,
-                companionPhone: companionPhone,
-                companionRelationship: companionRelation,
-                idStudent: doctorId
-            }
-
-            const historyRes = await makeAdultHistory(historyData)
-            if(historyRes.status == 200){
-                messageApi.open({
-                    type: 'success',
-                    content: "Paciente registrado"
-                })
-                const dateData = {
-                    patientId: historyRes.data.uuid,
-                    doctorId: doctorId,
-                    date: mergeDateTime(date, time)
+                const historyData = {
+                    patientIdentification: id,
+                    name: name,
+                    lastname: lastname,
+                    identificationType: idType,
+                    birthDate: birthDate != undefined ? (birthDate.$d):(null),
+                    sex: sex,
+                    race: race,
+                    instructionGrade: instructionGrade,
+                    phone: phone,
+                    birthPlace: birthPlace,
+                    childPosition: childPosition,
+                    ethnicity: ethnicity,
+                    addressState: state,
+                    addressMunicipality: municipality,
+                    addressCity: city,
+                    address: address,
+                    emergencyName: emergencyName,
+                    emergencyPhone: emergencyPhone,
+                    emergencyRelationship: emergencyRelation,
+                    companionName: companionName,
+                    companionPhone: companionPhone,
+                    companionRelationship: companionRelation,
+                    idStudent: doctorId,
+                    workType: workType,
+                    familyBurden: familyBurden,
+                    currentWorking: currentWorking,
+                    homeOwnership: homeOwnership
                 }
-                console.log(dateData)
-                const dateRes = await makeDate(dateData)
-                if(dateRes.status == 200){
+
+                console.log(historyData)
+
+                const historyRes = await makeAdultHistory(historyData)
+                if(historyRes.status == 200){
                     messageApi.open({
                         type: 'success',
-                        content: "Cita registrada"
+                        content: "Paciente registrado"
                     })
-                    setLoading(false)
-                    setPatientExists(null)
+                    const dateData = {
+                        patientId: historyRes.data.uuid,
+                        doctorId: doctorId,
+                        date: mergeDateTime(date, time)
+                    }
+                    console.log(dateData)
+                    const dateRes = await makeDate(dateData)
+                    if(dateRes.status == 200){
+                        messageApi.open({
+                            type: 'success',
+                            content: "Cita registrada"
+                        })
+                        setLoading(false)
+                        setPatientExists(null)
+                    }else{
+                        setLoading(false)
+                        messageApi.open({
+                            type: 'error',
+                            content: "error al registrar la cita"
+                        })
+                    }
                 }else{
+                    setLoading(false)
                     messageApi.open({
                         type: 'error',
-                        content: "error al registrar la cita"
+                        content: "error al registrar al paciente"
                     })
                 }
-            }else{
+            }catch(err){
+                console.log(err)
+                setLoading(false)
                 messageApi.open({
                     type: 'error',
-                    content: "error al registrar al paciente"
+                    content: 'parece que algun dato esta incompleto'
                 })
             }
         }
@@ -239,13 +261,13 @@ const NewDate = () => {
                     </Space>
                     <Space>
                         <Form.Item label="Estado:">
-                            <Input id="stateField" />
+                            <Input id="addressStateField" />
                         </Form.Item>
                         <Form.Item label="Municipio:">
-                            <Input id="municipalityField" />
+                            <Input id="addressMunicipalityField" />
                         </Form.Item>
                         <Form.Item label="Ciudad:">
-                            <Input id="cityField" />
+                            <Input id="addressCityField" />
                         </Form.Item>
                     </Space>
                     <Form.Item label="Direccion:" layout="vertical">
@@ -282,6 +304,23 @@ const NewDate = () => {
                                 onChange={e=>setCompanionRelation(e)}    
                             />
                         </Form.Item>                        
+                    </Space>
+                    <Divider>Datos Socio economicos</Divider>
+                    <Space>
+                        <Form.Item label="Trabaja actualmente:">
+                            <Select options={lists.listOfThree.slice(0,2)} onChange={e=>setCurrentWorking(e)}/>
+                        </Form.Item>
+                        { currentWorking == 1 && <>
+                            <Form.Item label='Ocupacion:'>
+                                <Input id="workTypeField"/>
+                            </Form.Item>
+                            <Form.Item label="Tipo de vivienda">
+                                <Select options={lists.homeOwnership} onChange={e=>setHomeOwnership(e)}/>
+                            </Form.Item>
+                            <Form.Item label="Carga Famliar">
+                                <InputNumber controls={false} id="familyBurdenField" />
+                            </Form.Item>
+                        </> }
                     </Space>
 
                 </>)}
