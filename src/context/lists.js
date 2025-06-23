@@ -89,14 +89,14 @@ export const dateStatus = [
 export const relationshipType = [
     {label: 'Madre', value: 1},
     {label: 'Padre', value: 2},
-    {label: 'Abuelo/a', value: 4},
-    {label: 'Hermano/a', value: 5},
-    {label: 'Nieto/a', value: 6},
-    {label: 'Hijo/a', value: 7},
-    {label: 'Esposo/a', value: 8},
-    {label: 'Tio/a', value: 9},
-    {label: 'Sobrino/a', value: 10},
-    {label: 'Otros', value: 11},
+    {label: 'Abuelo/a', value: 3},
+    {label: 'Hermano/a', value: 4},
+    {label: 'Nieto/a', value: 5},
+    {label: 'Hijo/a', value: 6},
+    {label: 'Esposo/a', value: 7},
+    {label: 'Tio/a', value: 8},
+    {label: 'Sobrino/a', value: 9},
+    {label: 'Otros', value: 10},
 ]
 
 export const listOfThree = [
