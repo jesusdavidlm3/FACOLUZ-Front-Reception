@@ -1,7 +1,7 @@
 import { Divider, Button, Form, Space, Input, DatePicker, Select, TimePicker, InputNumber } from 'antd'
 import * as lists from '../context/lists'
 import React, { useState, useEffect, useContext } from 'react'
-import { getStudentList } from '../client/client'
+import { getStudentList, makeDate, makeChildHistory } from '../client/client'
 import { appContext } from '../context/appContext'
 import InputPhone from '../components/InputPhone'
 
@@ -19,7 +19,7 @@ const UnderAgeRegister = () => {
     const [ethnicity, setEthnicity] = useState(null)
     const [currentStudying, setCurrentStudying] = useState()
     const [instructionGrade, setInstructionGrade] = useState()
-    const [emergenciRelationship, setEmergencyRelationship] = useState()
+    const [emergenciRelationship, setEmergencyRelationship] = useState(null)
     const [companionRelationship, setCompanionRelationship] = useState()
     const [doctorId, setDoctorId] = useState()
     const [date, setDate] = useState()
@@ -28,7 +28,7 @@ const UnderAgeRegister = () => {
     const [representativeInstructionGrade, setRepresentativeInstructionGrade] = useState()
     const [homeOwnership, setHomeOwnership] = useState()
     const [companionPhone, setCompanionPhone] = useState()
-    const [emergencyPhone, setEmergencyPhone] = useState()
+    const [emergencyPhone, setEmergencyPhone] = useState(null)
     const [representativePhone, setRepresentativePhone] = useState()
     const [representativeWorkPhone, setRepresentativeWorkPhone] = useState()
 
@@ -50,59 +50,99 @@ const UnderAgeRegister = () => {
     }
 
     const send = async() => {
+        try{
+            const name = document.getElementById("nameField").value
+            const lastname = document.getElementById("lastnameField").value
+            const childPosition = document.getElementById("childPositionField").value
+            const addressState = document.getElementById("addressStateField").value
+            const addressMunicipality = document.getElementById("addressMunicipalityField").value
+            const addressCity = document.getElementById("addressCityField").value
+            const birthPlace = document.getElementById("birthPlaceField").value
+            const address = document.getElementById("addressField").value
+            const companionName = document.getElementById("companionNameField").value
+            const emergencyName = document.getElementById("emergencyNameField").value
+            const representativeName = document.getElementById("representativeNameField").value
+            const representativeId = document.getElementById("representativeIdField").value
+            let representativeWorkType = representativeWorking == 1 ? document.getElementById("representativeWorkTypeField").value : null
+            let representativeWorkAddress = representativeWorking == 1 ? document.getElementById("representativeWorkAddressField").value : null
+            const representativeFamilyBurden = document.getElementById("representativeFamilyBurdenField").value
+            const numberOfRooms = document.getElementById("numberOfRoomsField").value
 
-        const name = document.getElementById("nameField").value
-        const lastname = document.getElementById("lastnameField").value
-        const childPosition = document.getElementById("childPositionField").value
-        const addressState = document.getElementById("addressStateField").value
-        const addressMunicipality = document.getElementById("addressMunicipalityField").value
-        const addressCity = document.getElementById("addressCityField").value
-        const birthPlace = document.getElementById("birthPlaceField").value
-        const address = document.getElementById("addressField").value
-        const companionName = document.getElementById("companionNameField").value
-        const emergencyName = document.getElementById("emergencyNameField").value
-        const representativeName = document.getElementById("representativeNameField").value
-        const representativeId = document.getElementById("representativeIdField").value
-        const representativeWorkType = document.getElementById("representativeWorkTypeField").value
-        const representativeWorkAddress = document.getElementById("representativeWorkAddressField").value
-        const representativeFamilyBurden = document.getElementById("representativeFamilyBurdenField").value
-        const numberOfRooms = document.getElementById("numberOfRoomsField").value
+            const historyData = {
+                name: name,
+                lastname: lastname,
+                birthDate: birthDate,
+                childPosition: childPosition,
+                sex: sex,
+                race: race,
+                ethnicity: ethnicity,
+                instructionGrade: instructionGrade,
+                currentStudying: currentStudying,
+                addressState: addressState,
+                addressMunicipality: addressMunicipality,
+                addressCity: addressCity,
+                birthPlace: birthPlace,
+                address: address,
+                companionName: companionName,
+                companionPhone: companionPhone,
+                companionRelationship: companionRelationship,
+                emergencyName: emergencyName,
+                emergencyPhone: emergencyPhone,
+                emergencyRelationship: emergenciRelationship,
+                representativeName: representativeName,
+                representativeId: representativeId,
+                representativeInstructionGrade: representativeInstructionGrade,
+                representativePhone: representativePhone,
+                representativeWorking: representativeWorking,
+                representativeWorkType: representativeWorkType,
+                representativeWorkAddress: representativeWorkAddress,
+                representativeWorkPhone: representativeWorkPhone,
+                // representativeWorkEntry: ,
+                // representativeWorkLeaving: string,
+                representativeFamilyBurden: representativeFamilyBurden,
+                homeOwnership: homeOwnership,
+                numberOfRooms: numberOfRooms,
+                idStudent: doctorId,
+            }
 
-        const data = {
-            name: name,
-            lastname: lastname,
-            birthDate: birthDate,
-            childPosition: childPosition,
-            sex: sex,
-            race: race,
-            ethnicity: ethnicity,
-            instructionGrade: instructionGrade,
-            currentStudying: currentStudying,
-            addressState: addressState,
-            addressMunicipality: addressMunicipality,
-            addressCity: addressCity,
-            birthPlace: birthPlace,
-            address: address,
-            companionName: companionName,
-            companionPhone: companionPhone,
-            companionRelationship: companionRelationship,
-            emergencyName: emergencyName,
-            emergencyPhone: emergencyPhone,
-            emergencyRelationship: emergenciRelationship,
-            representativeName: representativeName,
-            representativeId: representativeId,
-            representativeInstructionGrade: representativeInstructionGrade,
-            representativePhone: representativePhone,
-            representativeWorking: representativeWorking,
-            representativeWorkType: representativeWorkType,
-            representativeWorkAddress: representativeWorkAddress,
-            representativeWorkPhone: representativeWorkPhone,
-            // representativeWorkEntry: ,
-            // representativeWorkLeaving: string,
-            representativeFamilyBurden: representativeFamilyBurden,
-            homeOwnership: homeOwnership,
-            numberOfRooms: numberOfRooms,
-            idStudent: doctorId,
+            const historyRes = await makeChildHistory(historyData)
+            if(historyRes.status == 200){
+                messageApi.open({
+                    type: 'success',
+                    content: 'Paciente registrado correctamente'
+                })
+                const dateData = {
+                    patientId: historyRes.data.uuid,
+                    doctorId: doctorId,
+                    date: mergeDateTime(date, time)
+                }
+                const dateRes = await makeDate(dateData)
+                if(dateRes.status == 200){
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Cita registrada'
+                    })
+                    setLoading(false)
+                    setPatientExists(null)
+                }else{
+                    messageApi.open({
+                        type: 'error',
+                        content: 'error al registrar la cita'
+                    })
+                }
+            } else {
+                messageApi.open({
+                    type: 'error',
+                    content: 'error al registrar el paciente'
+                })
+            }
+        }catch(err){
+            console.log(err)
+            setLoading(false)
+            messageApi.open({
+                type: 'error',
+                content: 'parece que algun dato esta incompleto'
+            })
         }
     }
 
@@ -127,13 +167,13 @@ const UnderAgeRegister = () => {
                 </Space>
                 <Space>
                     <Form.Item label="Sexo:">
-                        <Select options={lists.sexList} onChange={()=>setSex(e)} style={{width: '150px'}}/>
+                        <Select options={lists.sexList} onChange={e=>setSex(e)} style={{width: '150px'}}/>
                     </Form.Item>
                     <Form.Item label="Raza:">
                         <Select options={lists.raceList} onChange={e=>setRace(e)} style={{width: '150px'}}/>
                     </Form.Item>
                     { race == 4 && (<Form.Item label='Etnia:'>
-                        <Select options={lists.ethnicityList} onChange={(e=>setEthnicity(e))} style={{width: '150px'}}/>
+                        <Select options={lists.ethnicityList} onChange={e=>setEthnicity(e)} style={{width: '150px'}}/>
                     </Form.Item>) }
                     <Form.Item label="Grado de instruccion:">
                         <Select options={lists.instructionGradeList.slice(0,4)} onChange={e=>setInstructionGrade(e)} style={{width: '150px'}}/>
@@ -214,7 +254,7 @@ const UnderAgeRegister = () => {
                 { representativeWorking == 1 && <>
                     <Space>
                         <Form.Item label='Telefono del trabajo:'>
-                            <InputPhone setter={setRepresentativeInstructionGrade}/>
+                            <InputPhone setter={setRepresentativeWorkPhone}/>
                         </Form.Item>
                         <Form.Item label='Horario de trabajo:'>
                             <TimePicker.RangePicker                             
@@ -263,7 +303,7 @@ const UnderAgeRegister = () => {
                     </Form.Item>
                 </Space>
 
-                <Button variant='solid' color='primary' htmlType='submit'>Agendar cita</Button>
+                <Button variant='solid' color='primary' htmlType='submit' onClick={send}>Agendar cita</Button>
             </Form>
         </div>
     )

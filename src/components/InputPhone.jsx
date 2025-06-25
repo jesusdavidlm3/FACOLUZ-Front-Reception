@@ -5,10 +5,12 @@ const InputPhone = ({setter}) => {
 
     const phonePrefixList = (
         <Select defaultValue="0414" onChange={e=>setPhonePrefix(e)}>
+            <Option value="0416">0416</Option>
+            <Option value="0426">0426</Option>
             <Option value="0414">0414</Option>
             <Option value="0424">0424</Option>
             <Option value="0412">0412</Option>
-            <Option value="0422">0422-</Option>
+            <Option value="0422">0422</Option>
         </Select>
     )
 

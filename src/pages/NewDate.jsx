@@ -106,9 +106,9 @@ const NewDate = () => {
                 const city = document.getElementById("addressCityField").value
                 const address = document.getElementById("addressField").value
                 const emergencyName = document.getElementById("emergencyNameField").value
-                const companionName = document.getElementById("companionNameField").value
+                const companionName = document.getElementById("companionNameField").value 
                 let workType = currentWorking == 1 ? (document.getElementById("workTypeField").value):(null)
-                const familyBurden = document.getElementById("familyBurdenField").value
+                let familyBurden = currentWorking == 1 ? (document.getElementById("familyBurdenField").value):(0)
 
                 const historyData = {
                     patientIdentification: id,
@@ -307,15 +307,15 @@ const NewDate = () => {
                     </Space>
                     <Divider>Datos Socio economicos</Divider>
                     <Space>
+                        <Form.Item label="Tipo de vivienda">
+                            <Select options={lists.homeOwnership} onChange={e=>setHomeOwnership(e)}/>
+                        </Form.Item>
                         <Form.Item label="Trabaja actualmente:">
                             <Select options={lists.listOfThree.slice(0,2)} onChange={e=>setCurrentWorking(e)}/>
                         </Form.Item>
                         { currentWorking == 1 && <>
                             <Form.Item label='Ocupacion:'>
                                 <Input id="workTypeField"/>
-                            </Form.Item>
-                            <Form.Item label="Tipo de vivienda">
-                                <Select options={lists.homeOwnership} onChange={e=>setHomeOwnership(e)}/>
                             </Form.Item>
                             <Form.Item label="Carga Famliar">
                                 <InputNumber controls={false} id="familyBurdenField" />

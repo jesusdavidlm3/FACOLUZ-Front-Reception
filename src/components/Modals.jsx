@@ -20,7 +20,7 @@ export const LogoutModal = ({open, onCancel}) => {
         <Modal
             title='Cerrar sesion'
             open={open}
-            onCancel={onCancel}
+            closable={false}
             footer={[
                 <Button variant='solid' color='danger' onClick={logout} >Cerrar sesion</Button>,
                 <Button onClick={onCancel} variant='text' >Cancelar</Button>
@@ -35,6 +35,7 @@ export const ConfirmCancelDate = ({open, onCancel, dateId}) => {
         <Modal
             title="Cancelar cita?"
             open={open}
+            closable={false}
             onCancel={onCancel}
             footer={[
                 <Button color="primary" variant="solid">Cancelar cita</Button>,
@@ -60,6 +61,7 @@ export const EditDateModal = ({open, onCancel, data}) => {
             title="Editar cita"
             open={open}
             onCancel={onCancel}
+            closable={false}
             footer={[
                 <Button variant="solid" color="primary" onClick={saveDate} >Guardar</Button>,
                 <Button color="primary" variant="solid" onClick={onCancel}>Salir</Button>

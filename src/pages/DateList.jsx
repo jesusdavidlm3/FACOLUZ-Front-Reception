@@ -58,7 +58,7 @@ const DateList = () => {
             />
 
             <EditDateModal
-                open={cancelModal}
+                open={editModal}
                 data={selectedDate}
                 onCancel={() => setEditModal(false)}
             />
