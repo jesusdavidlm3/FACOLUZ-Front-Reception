@@ -4,6 +4,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { getStudentList, makeDate, makeChildHistory } from '../client/client'
 import { appContext } from '../context/appContext'
 import InputPhone from '../components/InputPhone'
+import Title from 'antd/es/typography/Title'
 
 const UnderAgeRegister = () => {
 
@@ -19,16 +20,16 @@ const UnderAgeRegister = () => {
     const [ethnicity, setEthnicity] = useState(null)
     const [currentStudying, setCurrentStudying] = useState()
     const [instructionGrade, setInstructionGrade] = useState()
-    const [emergenciRelationship, setEmergencyRelationship] = useState(null)
-    const [companionRelationship, setCompanionRelationship] = useState()
+    const [emergenciRelationship, setEmergencyRelationship] = useState()
+    const [companionRelationship, setCompanionRelationship] = useState(null)
     const [doctorId, setDoctorId] = useState()
     const [date, setDate] = useState()
     const [time, setTime] = useState()
     const [representativeWorking, setRepresentativeWorking] = useState()
     const [representativeInstructionGrade, setRepresentativeInstructionGrade] = useState()
     const [homeOwnership, setHomeOwnership] = useState()
-    const [companionPhone, setCompanionPhone] = useState()
-    const [emergencyPhone, setEmergencyPhone] = useState(null)
+    const [companionPhone, setCompanionPhone] = useState(null)
+    const [emergencyPhone, setEmergencyPhone] = useState()
     const [representativePhone, setRepresentativePhone] = useState()
     const [representativeWorkPhone, setRepresentativeWorkPhone] = useState()
 
@@ -53,26 +54,25 @@ const UnderAgeRegister = () => {
         try{
             const name = document.getElementById("nameField").value
             const lastname = document.getElementById("lastnameField").value
-            const childPosition = document.getElementById("childPositionField").value
+            //const childPosition = document.getElementById("childPositionField").value
             const addressState = document.getElementById("addressStateField").value
             const addressMunicipality = document.getElementById("addressMunicipalityField").value
             const addressCity = document.getElementById("addressCityField").value
             const birthPlace = document.getElementById("birthPlaceField").value
             const address = document.getElementById("addressField").value
-            const companionName = document.getElementById("companionNameField").value
+            const companionName = document.getElementById("companionNameField").value | null
             const emergencyName = document.getElementById("emergencyNameField").value
             const representativeName = document.getElementById("representativeNameField").value
-            const representativeId = document.getElementById("representativeIdField").value
+            const representativeId = document.getElementById("representativeIdField").value 
             let representativeWorkType = representativeWorking == 1 ? document.getElementById("representativeWorkTypeField").value : null
             let representativeWorkAddress = representativeWorking == 1 ? document.getElementById("representativeWorkAddressField").value : null
-            const representativeFamilyBurden = document.getElementById("representativeFamilyBurdenField").value
-            const numberOfRooms = document.getElementById("numberOfRoomsField").value
+            const representativeFamilyBurden = representativeWorking == 1 ?document.getElementById("representativeFamilyBurdenField").value : null
 
             const historyData = {
                 name: name,
                 lastname: lastname,
                 birthDate: birthDate,
-                childPosition: childPosition,
+                //childPosition: childPosition,
                 sex: sex,
                 race: race,
                 ethnicity: ethnicity,
@@ -97,15 +97,14 @@ const UnderAgeRegister = () => {
                 representativeWorkType: representativeWorkType,
                 representativeWorkAddress: representativeWorkAddress,
                 representativeWorkPhone: representativeWorkPhone,
-                // representativeWorkEntry: ,
-                // representativeWorkLeaving: string,
                 representativeFamilyBurden: representativeFamilyBurden,
                 homeOwnership: homeOwnership,
-                numberOfRooms: numberOfRooms,
                 idStudent: doctorId,
             }
-
+            console.log(historyData)
             const historyRes = await makeChildHistory(historyData)
+            console.log(historyRes)
+            
             if(historyRes.status == 200){
                 messageApi.open({
                     type: 'success',
@@ -149,7 +148,8 @@ const UnderAgeRegister = () => {
     return(
         <div className="UnderAgeRegister">
             {contextHolder}
-            <Divider>Registrar menor de edad</Divider>
+            <Title level={2} style={{textAlign: 'center'}}>Registro de pacientes menores de edad</Title>
+            <Divider></Divider>
             <Form onFinish={send} style={{display: 'Flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Space>
                     <Form.Item label="Nombre:">
@@ -239,6 +239,13 @@ const UnderAgeRegister = () => {
                     </Form.Item>
                 </Space>
                 <Space>
+                    <Form.Item label='Tipo de vivienda:'>
+                        <Select
+                            options={lists.homeOwnership}
+                            style={{width: '150px'}}
+                            onChange={e=>setHomeOwnership(e)}
+                        />
+                    </Form.Item>
                     <Form.Item label='Trabaja actualmente:'>
                         <Select
                             options={lists.listOfThree.slice(0,2)}
@@ -256,33 +263,14 @@ const UnderAgeRegister = () => {
                         <Form.Item label='Telefono del trabajo:'>
                             <InputPhone setter={setRepresentativeWorkPhone}/>
                         </Form.Item>
-                        <Form.Item label='Horario de trabajo:'>
-                            <TimePicker.RangePicker                             
-                                use12Hours
-                                format="hh:mm a"
-                            />
+                        <Form.Item label='Cargar familiar:'>
+                            <InputNumber controls={false} id='representativeFamilyBurdenField'/>
                         </Form.Item>
                     </Space>
                     <Form.Item label='Direccion de trabajo:' layout='vertical'>
                         <Input.TextArea id='representativeWorkAddressField' style={{width: '50vw'}} autoSize/>
                     </Form.Item>
                 </> }
-                <Divider>Vivienda</Divider>
-                <Space>
-                    <Form.Item label='Tipo de vivienda:'>
-                        <Select
-                            options={lists.homeOwnership}
-                            style={{width: '150px'}}
-                            onChange={e=>setHomeOwnership(e)}
-                        />
-                    </Form.Item>
-                    <Form.Item label='Numero de habitaciones:'>
-                        <InputNumber controls={false} id='numberOfRoomsField'/>
-                    </Form.Item>
-                    <Form.Item label='Cargar familiar:'>
-                        <InputNumber controls={false} id='representativeFamilyBurdenField'/>
-                    </Form.Item>
-                </Space>
                 <Divider>Datos de la cita</Divider>
                 <Space>
                     <Form.Item label='Doctor:'>
