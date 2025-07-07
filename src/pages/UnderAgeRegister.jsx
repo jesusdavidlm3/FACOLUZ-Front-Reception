@@ -2,6 +2,7 @@ import { Divider, Button, Form, Space, Input, DatePicker, Select, TimePicker, In
 import * as lists from '../context/lists'
 import React, { useState, useEffect, useContext } from 'react'
 import { getStudentList, makeDate, makeChildHistory } from '../client/client'
+import { mergeDateTime, getAge } from "../functions/formatDateTime";
 import { appContext } from '../context/appContext'
 import InputPhone from '../components/InputPhone'
 import Title from 'antd/es/typography/Title'
@@ -38,6 +39,28 @@ const UnderAgeRegister = () => {
         getList()
     }, [])
 
+    function cleanState(){
+        setSex(null)
+        setBirthDate(null)
+        setDate(null)
+        setTime(null)
+        setDoctorId(null)
+        setRace(null)
+        setEthnicity(null)
+        setRepresentativeWorking(null)
+        setRepresentativeInstructionGrade(null)
+        setEmergencyRelationship(null)
+        setCompanionRelationship(null)
+        setRepresentativePhone(null)
+        setRepresentativeWorkPhone(null)
+        setInstructionGrade(null)
+        setCompanionPhone(null)
+        setEmergencyPhone(null)
+        setCurrentWorking(false)
+        setHomeOwnership(null)
+        setCurrentStudying(null)
+    }
+
     const getList = async() => {
         const res = await getStudentList()
         if(res.status == 200){
@@ -60,18 +83,18 @@ const UnderAgeRegister = () => {
             const addressCity = document.getElementById("addressCityField").value
             const birthPlace = document.getElementById("birthPlaceField").value
             const address = document.getElementById("addressField").value
-            const companionName = document.getElementById("companionNameField").value | null
+            const companionName = document.getElementById("companionNameField").value || null
             const emergencyName = document.getElementById("emergencyNameField").value
             const representativeName = document.getElementById("representativeNameField").value
             const representativeId = document.getElementById("representativeIdField").value 
             let representativeWorkType = representativeWorking == 1 ? document.getElementById("representativeWorkTypeField").value : null
-            let representativeWorkAddress = representativeWorking == 1 ? document.getElementById("representativeWorkAddressField").value : null
-            const representativeFamilyBurden = representativeWorking == 1 ?document.getElementById("representativeFamilyBurdenField").value : null
+            //let representativeWorkAddress = representativeWorking == 1 ? document.getElementById("representativeWorkAddressField").value : null
+            const representativeFamilyBurden = representativeWorking == 1 ?document.getElementById("representativeFamilyBurdenField").value : 0
 
             const historyData = {
                 name: name,
                 lastname: lastname,
-                birthDate: birthDate,
+                birthDate: birthDate != undefined ? (birthDate.$d):(null),
                 //childPosition: childPosition,
                 sex: sex,
                 race: race,
@@ -95,7 +118,7 @@ const UnderAgeRegister = () => {
                 representativePhone: representativePhone,
                 representativeWorking: representativeWorking,
                 representativeWorkType: representativeWorkType,
-                representativeWorkAddress: representativeWorkAddress,
+                //representativeWorkAddress: representativeWorkAddress,
                 representativeWorkPhone: representativeWorkPhone,
                 representativeFamilyBurden: representativeFamilyBurden,
                 homeOwnership: homeOwnership,
@@ -122,7 +145,7 @@ const UnderAgeRegister = () => {
                         content: 'Cita registrada'
                     })
                     setLoading(false)
-                    setPatientExists(null)
+                    cleanState()
                 }else{
                     messageApi.open({
                         type: 'error',
@@ -150,7 +173,7 @@ const UnderAgeRegister = () => {
             {contextHolder}
             <Title level={2} style={{textAlign: 'center'}}>Registro de pacientes menores de edad</Title>
             <Divider></Divider>
-            <Form onFinish={send} style={{display: 'Flex', alignItems: 'center', flexDirection: 'column'}}>
+            <Form style={{display: 'Flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Space>
                     <Form.Item label="Nombre:">
                         <Input id='nameField'/>

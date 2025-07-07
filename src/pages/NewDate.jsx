@@ -28,10 +28,10 @@ const NewDate = () => {
     const [race, setRace] = useState()
     const [ethnicity, setEthnicity] = useState(null)
     const [emergencyRelation, setEmergencyRelation] = useState()
-    const [companionRelation, setCompanionRelation] = useState()
+    const [companionRelation, setCompanionRelation] = useState(null)
     const [instructionGrade, setInstructionGrade] = useState()
     const [phone, setPhone] = useState()
-    const [companionPhone, setCompanionPhone] = useState()
+    const [companionPhone, setCompanionPhone] = useState(null)
     const [emergencyPhone, setEmergencyPhone] = useState()
     const [currentWorking, setCurrentWorking] = useState(false)
     const [homeOwnership, setHomeOwnership] = useState()
@@ -40,6 +40,25 @@ const NewDate = () => {
     useEffect(() => {
         getList()
     }, [])
+
+    function cleanState(){
+        setSex(null)
+        setBirthDate(null)
+        setDate(null)
+        setTime(null)
+        setDoctorId(null)
+        setIdType(null)
+        setRace(null)
+        setEthnicity(null)
+        setEmergencyRelation(null)
+        setCompanionRelation(null)
+        setInstructionGrade(null)
+        setPhone(null)
+        setCompanionPhone(null)
+        setEmergencyPhone(null)
+        setCurrentWorking(false)
+        setHomeOwnership(null)
+    }
 
     const getList = async() => {
         const res = await getStudentList()
@@ -54,18 +73,25 @@ const NewDate = () => {
     }
 
     const verifyPatient = async(e) => {
-        const res = await verifyPatientExist(e)
-        console.log(res)
-        if(res.status == 200){
-            setPatientExists(true)
-            setPatientData(res.data[0])
-        }else if(res.status == 404){
-            setPatientExists(false)
-        }else{
+        if(e.length > 0){
+            const res = await verifyPatientExist(e)
             console.log(res)
+            if(res.status == 200){
+                setPatientExists(true)
+                setPatientData(res.data[0])
+            }else if(res.status == 404){
+                setPatientExists(false)
+            }else{
+                console.log(res)
+                messageApi.open({
+                    type: "error",
+                    content: "ah ocurrido un error"
+                })
+            }
+        } else{
             messageApi.open({
-                type: "error",
-                content: "ah ocurrido un error"
+                type: "info",
+                content: "Debe ingresar una cedula o codigo de un paciente"
             })
         }
     }
@@ -100,13 +126,13 @@ const NewDate = () => {
                 const name = document.getElementById("nameField").value
                 const lastname = document.getElementById("lastnameField").value
                 const birthPlace = document.getElementById("birthPlaceField").value
-                const childPosition = document.getElementById("childPositionField").value
+                //const childPosition = document.getElementById("childPositionField").value
                 const state = document.getElementById("addressStateField").value
                 const municipality = document.getElementById("addressMunicipalityField").value
                 const city = document.getElementById("addressCityField").value
                 const address = document.getElementById("addressField").value
                 const emergencyName = document.getElementById("emergencyNameField").value
-                const companionName = document.getElementById("companionNameField").value 
+                const companionName = document.getElementById("companionNameField").value || null
                 let workType = currentWorking == 1 ? (document.getElementById("workTypeField").value):(null)
                 let familyBurden = currentWorking == 1 ? (document.getElementById("familyBurdenField").value):(0)
 
@@ -121,7 +147,7 @@ const NewDate = () => {
                     instructionGrade: instructionGrade,
                     phone: phone,
                     birthPlace: birthPlace,
-                    childPosition: childPosition,
+                    //childPosition: childPosition,
                     ethnicity: ethnicity,
                     addressState: state,
                     addressMunicipality: municipality,
@@ -162,6 +188,7 @@ const NewDate = () => {
                         })
                         setLoading(false)
                         setPatientExists(null)
+                        cleanState()
                     }else{
                         setLoading(false)
                         messageApi.open({
@@ -255,9 +282,7 @@ const NewDate = () => {
                         <Form.Item label="Lugar de nacimiento">
                             <Input id="birthPlaceField"/>
                         </Form.Item>
-                        <Form.Item label='Numero de hijo:'>
-                            <InputNumber id='childPositionField' controls={false}/>
-                        </Form.Item>
+                        
                     </Space>
                     <Space>
                         <Form.Item label="Estado:">
