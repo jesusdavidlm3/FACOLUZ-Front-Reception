@@ -31,6 +31,21 @@ export async function makeDate(data) {
 	return res
 }
 
+export async function getDates() {
+	const res = await http.get('api/getDates', token)
+	return res
+}
+
+export async function getDatesByPatient(patientId) {
+	const res = await http.get(`api/getDateByPatient/${patientId}`, token)
+	return res
+}
+
+export async function getDateByDate(date) {
+	const res = await http.get(`api/getDateByDate/${date}`, token)
+	return res
+}
+
 export async function editDate(data) {
 	const res = await http.patch('api/editDate', token, data)
 	return res

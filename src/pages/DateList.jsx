@@ -1,29 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { List, Button, Tooltip, Input, DatePicker, Divider, Form } from 'antd'
 import { FormOutlined, StopOutlined } from '@ant-design/icons'
+import { getDates, getDatesByPatient, getDateByDate } from '../client/client'
 import { EditDateModal, ConfirmCancelDate } from '../components/Modals'
 
 const DateList = () => {
 
-    const pruebas = [
-        {id: "55", doctorName: "Juan Patricio", patientName: "Horacio Wilbur", date: Date.now()},
-        {id: "44668", doctorName: "Bob Esponja", patientName: "Patricio Estrella", date: Date.now()},
-        {id: "35343", doctorName: "Patricio Estrella", patientName: "Bob Esponja", date: Date.now()},
-        {id: "3984398", doctorName: "Horacio Wilbur", patientName: "Juan Patricio", date: Date.now()}
-    ]
+    const pruebas = []
 
     const [selectedDate, setSelectedDate] = useState()
     const [editModal, setEditModal] = useState(false)
     const [cancelModal, setCancelModal] = useState(false)
-
     const [showList, setShowList] = useState(pruebas)
+    
+    useEffect(() => {
+        getList()
+    },[])
 
-    const searchById = (e) => {
+    const getList = async () => {
+        const res = await getDates();
+        setShowList(res.data);
+    };
 
+    async function searchById(e) {
+        if(e.toString() == ''){
+            getList()
+            return
+        }
+        const res = await getDatesByPatient(e)
+        setShowList(res.data)
     }
 
-    const searchByDate = (e) => {
-
+    async function searchByDate(e) {
+        if(e.toString() == ''){
+            getList()
+            return
+        }
+        const res = await getDateByDate(e)
+        setShowList(res.data)
     }
 
     return(
@@ -39,7 +53,7 @@ const DateList = () => {
             </Form>
             <List bordered size="small">
                 {showList.map(item => (<List.Item key={item.id}>
-                    <p>{Date(item.date).toString()} - {item.doctorName} - {item.patientName}</p>
+                    <p>{item.date.toString()} - {('Paciente: ' + item.patientName + ' ' + item.patientLastname)} - {('Doctor: ' + item.doctorName + ' ' + item.doctorLastname)}</p>
                     <div className="Buttons">
                         <Tooltip title="Editar cita">
                             <Button variant="solid" color="primary" icon={<FormOutlined />} shape="circle" size="large" onClick={() => setEditModal(true)}/>
