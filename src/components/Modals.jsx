@@ -4,6 +4,7 @@ import { appContext } from "../context/appContext";
 import * as lists from '../context/lists'
 import React from 'react'
 import { routerContext } from '../context/routerContext'
+import { cancelDate } from "../client/client";
 
 export const LogoutModal = ({open, onCancel}) => {
 
@@ -30,20 +31,24 @@ export const LogoutModal = ({open, onCancel}) => {
     )
 }
 
-export const ConfirmCancelDate = ({open, onCancel, dateId}) => {
-    return(
-        <Modal
-            title="Cancelar cita?"
-            open={open}
-            closable={false}
-            onCancel={onCancel}
-            footer={[
-                <Button color="primary" variant="solid">Cancelar cita</Button>,
-                <Button color="primary" variant="solid" onClick={onCancel}>Salir</Button>
-            ]}
-        >
-        </Modal>
-    )
+export const ConfirmCancelDate = ({open, onCancel, rawData}) => {
+    console.log(rawData)
+    const data = () => {
+        return(
+            <Modal
+                title="Cancelar cita?"
+                open={open}
+                closable={false}
+                onCancel={onCancel}
+                footer={[
+                    <Button key="submit" color="primary" variant="solid" onClick={() => {cancelDate(data.dateId)}}>Cancelar cita</Button>,
+                    <Button key="back" color="primary" variant="solid" onClick={onCancel}>Salir</Button>
+                ]}
+            >
+            </Modal>
+        )
+    }
+    
 }
 
 export const EditDateModal = ({open, onCancel, data}) => {
