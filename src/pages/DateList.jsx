@@ -1,31 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { List, Button, Tooltip, Input, DatePicker, Divider, Form } from 'antd'
 import { FormOutlined, StopOutlined } from '@ant-design/icons'
-import { getDates, getDatesByPatient, getDateByDate } from '../client/client'
+import { getDates, getDatesByPatient, getDateByDate, cancelDate } from '../client/client'
 import { EditDateModal, ConfirmCancelDate } from '../components/Modals'
 import { mergeDate, getDate } from "../functions/formatDateTime";
 
 const DateList = () => {
 
-    const pruebas = []
-
-    const [selectedDate, setSelectedDate] = useState()
+    const l = []
+    const [doctorList, setStudentList] = useState()
+    const [selectedDate, setSelectedDate] = useState('')
     const [editModal, setEditModal] = useState(false)
     const [cancelModal, setCancelModal] = useState(false)
-    const [showList, setShowList] = useState(pruebas)
-    const [firstLoad, setFirstLoad] = useState(false)
+    const [showList, setShowList] = useState(l)
+    
     useEffect(() => {
         getList()
-    },[])
+        getDatesList()
+    }, [])
+    const getList = async() => {
+            const res = await getStudentList()
+            if(res.status == 200){
+                setStudentList(res.data.map(item => ({label: `${item.name} ${item.lastname}`, value: item.id})))
+            }else{
+                messageApi.open({
+                    type: 'error',
+                    content: 'error al obtener la lista de doctores'
+                })
+            }
+        }
 
-    const getList = async () => {
+    async function getDatesList() {
         const res = await getDates();
         setShowList(res.data);
     };
 
     async function searchById(e) {
         if(e.toString() == ''){
-            getList()
+            getDatesList()
             return
         }
         const res = await getDatesByPatient(e)
@@ -34,7 +46,7 @@ const DateList = () => {
 
     async function searchByDate(e) {
         if(e == null){
-            getList()
+            getDatesList()
             return
         }
         const date = mergeDate(e)
@@ -70,13 +82,14 @@ const DateList = () => {
 
             <ConfirmCancelDate
                 open={cancelModal}
-                rawData={selectedDate}
+                id={selectedDate.dateId}
                 onCancel={() => setCancelModal(false)}
             />
 
             <EditDateModal
                 open={editModal}
                 data={selectedDate}
+                doctorList={doctorList}
                 onCancel={() => setEditModal(false)}
             />
         </div>

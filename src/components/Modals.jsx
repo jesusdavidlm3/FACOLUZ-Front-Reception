@@ -1,7 +1,6 @@
 import { Modal, Form, Select, DatePicker, TimePicker, Input, Space, InputNumber, Button, Steps } from "antd";
 import { useContext, useState, useEffect } from "react";
 import { appContext } from "../context/appContext";
-import * as lists from '../context/lists'
 import React from 'react'
 import { routerContext } from '../context/routerContext'
 import { cancelDate } from "../client/client";
@@ -31,57 +30,103 @@ export const LogoutModal = ({open, onCancel}) => {
     )
 }
 
-export const ConfirmCancelDate = ({open, onCancel, rawData}) => {
-    console.log(rawData)
-    const data = () => {
-        return(
+export const ConfirmCancelDate = ({open, onCancel, id}) => {
+
+    const {messageApi} = useContext(appContext)
+    const [loading, setLoading] = useState(false)
+
+    const handleDelete = async () => {
+        setLoading(true)
+        let res = await cancelDate(id)
+        console.log(res)
+        if(res.status == 200){
+            messageApi.open({
+                type: 'success',
+                content: 'Eliminado con exito'
+            })
+            setLoading(false)
+            updateList()
+            onCancel()
+        }else{
+            setLoading(false)
+            messageApi.open({
+                type: 'error',
+                content: 'ah ocurrido un error'
+            })
+        }
+    }
+    return(
             <Modal
-                title="Cancelar cita?"
+                title="¿Desea cancelar la cita?"
                 open={open}
                 closable={false}
-                onCancel={onCancel}
+                //onCancel={onCancel}
                 footer={[
-                    <Button key="submit" color="primary" variant="solid" onClick={() => {cancelDate(data.dateId)}}>Cancelar cita</Button>,
-                    <Button key="back" color="primary" variant="solid" onClick={onCancel}>Salir</Button>
+                    <Button disabled={loading} color="primary" variant="solid" onClick={handleDelete}>Cancelar cita</Button>,
+                    <Button disabled={loading} color="primary" variant="solid" onClick={onCancel}>Salir</Button>
                 ]}
-            >
-            </Modal>
+            ></Modal>
         )
-    }
+    
     
 }
 
-export const EditDateModal = ({open, onCancel, data}) => {
+export const EditDateModal = ({open, onCancel, data, doctorList}) => {
 
     const [date, setDate] = useState()
     const [time, setTime] = useState()
     const [doctorId, setDoctorId] = useState()
+    
 
-    const saveDate = () => {
-
+    const handlesaveDate = async () => {
+        setLoading(true)
+        let res = await editDate(data)
+        console.log(res)
+        if(res.status == 200){
+            messageApi.open({
+                type: 'success',
+                content: 'Cita cambiada con exito'
+            })
+            setLoading(false)
+            updateList()
+            onCancel()
+        }else{
+            setLoading(false)
+            messageApi.open({
+                type: 'error',
+                content: 'ah ocurrido un error'
+            })
+        }
     }
 
     return(
         <Modal
-            title="Editar cita"
+            title="Cambiar cita"
             open={open}
             onCancel={onCancel}
             closable={false}
             footer={[
-                <Button variant="solid" color="primary" onClick={saveDate} >Guardar</Button>,
+                <Button variant="solid" color="primary" onClick={handlesaveDate} >Guardar</Button>,
                 <Button color="primary" variant="solid" onClick={onCancel}>Salir</Button>
             ]}
         >
             <Form>
                 <Form.Item labe="Doctor: ">
-                    <Select/>
+                    <Select options={doctorList} onChange={e=>setDoctorId(e)}/>
                 </Form.Item>
                 <Space>
                     <Form.Item labe="Fecha: ">
-                        <DatePicker/>
+                        <DatePicker
+                            format="DD/MM/YYYY"
+                            onChange={(a, b)=>setDate(a.$d)}
+                        />
                     </Form.Item>
                     <Form.Item labe="Hora: ">
-                        <TimePicker/>
+                        <TimePicker
+                            onChange={(a, b)=>setTime(a.$d)}
+                            use12Hours
+                            format="hh:mm a"
+                        />
                     </Form.Item>
                 </Space>
             </Form>

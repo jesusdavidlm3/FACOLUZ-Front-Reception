@@ -52,7 +52,7 @@ export async function editDate(data) {
 }
 
 export async function cancelDate(dateId) {
-	const res = await http.delete(`api/cancelDate/${dateId}`, token)
+	const res = await http.patch(`api/cancelDate/${dateId}`, token)
 	return res
 }
 
