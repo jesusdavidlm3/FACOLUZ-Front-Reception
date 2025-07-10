@@ -3,7 +3,8 @@ import { useContext, useState, useEffect } from "react";
 import { appContext } from "../context/appContext";
 import React from 'react'
 import { routerContext } from '../context/routerContext'
-import { cancelDate } from "../client/client";
+import { editDate, cancelDate } from "../client/client";
+import { getDate, getTime, mergeDate, mergeTime } from "../functions/formatDateTime";
 
 export const LogoutModal = ({open, onCancel}) => {
 
@@ -30,28 +31,35 @@ export const LogoutModal = ({open, onCancel}) => {
     )
 }
 
-export const ConfirmCancelDate = ({open, onCancel, id}) => {
-
+export const ConfirmCancelDate = ({open, onCancel, id, updateList}) => {
     const {messageApi} = useContext(appContext)
     const [loading, setLoading] = useState(false)
 
     const handleDelete = async () => {
-        setLoading(true)
-        let res = await cancelDate(id)
-        console.log(res)
-        if(res.status == 200){
-            messageApi.open({
-                type: 'success',
-                content: 'Eliminado con exito'
-            })
-            setLoading(false)
-            updateList()
-            onCancel()
-        }else{
+        try{
+            setLoading(true)
+            let res = await cancelDate(id)
+            if(res.status == 200){
+                messageApi.open({
+                    type: 'success',
+                    content: 'Eliminado con exito'
+                })
+                setLoading(false)
+                updateList()
+                onCancel()
+            }else{
+                setLoading(false)
+                messageApi.open({
+                    type: 'error',
+                    content: 'ah ocurrido un error'
+                })
+            }
+        }catch(err){
+            console.log(err)
             setLoading(false)
             messageApi.open({
                 type: 'error',
-                content: 'ah ocurrido un error'
+                content: 'parece que algun dato esta incompleto'
             })
         }
     }
@@ -71,59 +79,98 @@ export const ConfirmCancelDate = ({open, onCancel, id}) => {
     
 }
 
-export const EditDateModal = ({open, onCancel, data, doctorList}) => {
-
+export const EditDateModal = ({open, onCancel, data, doctorList, uptateList}) => {
     const [date, setDate] = useState()
     const [time, setTime] = useState()
     const [doctorId, setDoctorId] = useState()
-    
+    const {messageApi} = useContext(appContext)
+    const [loading, setLoading] = useState(false)
 
+    useEffect(() => {
+        if (data) {
+            defaultDateTime()
+            setDoctorId(data.doctorId)
+        }
+    }, [data]);
+
+    const defaultDateTime = () => {
+        const rawDate = getDate(data.date, true)
+        setDate(rawDate)
+
+        const rawTime = getTime(data.date)
+        setTime(rawTime)
+    }
+    const handleChangeDate = (value) => {
+        const rawDate = value !== undefined ? mergeDate(value) : date
+        setDate(rawDate)
+    }
+
+    const handleChangeTime = (value) => {
+        const rawTime = value !== undefined ? mergeTime(value) : time
+        setTime(rawTime)
+    }
+    
+    const dateData = {
+        id: data.dateId,
+        date: `${date} ${time}:00`,
+        doctorId: doctorId
+    }
+    
+    
     const handlesaveDate = async () => {
-        setLoading(true)
-        let res = await editDate(data)
-        console.log(res)
-        if(res.status == 200){
-            messageApi.open({
-                type: 'success',
-                content: 'Cita cambiada con exito'
-            })
-            setLoading(false)
-            updateList()
-            onCancel()
-        }else{
+        try{
+            setLoading(true)
+            let res = await editDate(dateData)
+            if(res.status == 200){
+                messageApi.open({
+                    type: 'success',
+                    content: 'Cita cambiada con exito'
+                })
+                setLoading(false)
+                uptateList()
+                onCancel()
+            }else{
+                setLoading(false)
+                messageApi.open({
+                    type: 'error',
+                    content: 'ah ocurrido un error'
+                })
+            }
+        }catch(err){
             setLoading(false)
             messageApi.open({
                 type: 'error',
-                content: 'ah ocurrido un error'
+                content: 'parece que algun dato esta incompleto'
             })
         }
     }
 
     return(
         <Modal
+            destroyOnClose
             title="Cambiar cita"
             open={open}
             onCancel={onCancel}
             closable={false}
             footer={[
-                <Button variant="solid" color="primary" onClick={handlesaveDate} >Guardar</Button>,
-                <Button color="primary" variant="solid" onClick={onCancel}>Salir</Button>
+                <Button disabled={loading} variant="solid" color="primary" onClick={handlesaveDate} >Guardar</Button>,
+                <Button disabled={loading} color="primary" variant="solid" onClick={onCancel}>Salir</Button>
             ]}
         >
             <Form>
                 <Form.Item labe="Doctor: ">
-                    <Select options={doctorList} onChange={e=>setDoctorId(e)}/>
+                    <Select  value={doctorId} options={doctorList} onChange={e=>setDoctorId(e)}/>
                 </Form.Item>
                 <Space>
                     <Form.Item labe="Fecha: ">
                         <DatePicker
                             format="DD/MM/YYYY"
-                            onChange={(a, b)=>setDate(a.$d)}
+                            onChange={(a, b)=> handleChangeDate(a.$d)}
                         />
                     </Form.Item>
                     <Form.Item labe="Hora: ">
                         <TimePicker
-                            onChange={(a, b)=>setTime(a.$d)}
+                            onChange={(a, b)=>handleChangeTime(a.$d)}
                             use12Hours
                             format="hh:mm a"
                         />

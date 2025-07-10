@@ -124,9 +124,7 @@ const UnderAgeRegister = () => {
                 homeOwnership: homeOwnership,
                 idStudent: doctorId,
             }
-            console.log(historyData)
             const historyRes = await makeChildHistory(historyData)
-            console.log(historyRes)
             
             if(historyRes.status == 200){
                 messageApi.open({

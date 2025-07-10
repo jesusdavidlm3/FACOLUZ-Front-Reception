@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { List, Button, Tooltip, Input, DatePicker, Divider, Form } from 'antd'
 import { FormOutlined, StopOutlined } from '@ant-design/icons'
-import { getDates, getDatesByPatient, getDateByDate, cancelDate } from '../client/client'
+import { getDates, getDatesByPatient, getDateByDate, getStudentList} from '../client/client'
 import { EditDateModal, ConfirmCancelDate } from '../components/Modals'
-import { mergeDate, getDate } from "../functions/formatDateTime";
+import { mergeDate, getDate, getTime } from "../functions/formatDateTime";
 
 const DateList = () => {
 
@@ -68,7 +68,7 @@ const DateList = () => {
             <List bordered size="small">
                 {showList.map(item => (
                     <List.Item key={item.dateId}>
-                    <p>{getDate(item.date.toString())} - {('Paciente: ' + item.patientName + ' ' + item.patientLastname)} - {('Doctor: ' + item.doctorName + ' ' + item.doctorLastname)}</p>
+                    <p>{getDate(item.date, false) + ' - ' + getTime(item.date)} - {('Paciente: ' + item.patientName + ' ' + item.patientLastname)} - {('Doctor: ' + item.doctorName + ' ' + item.doctorLastname)}</p>
                     <div className="Buttons">
                         <Tooltip onClick={() => {setSelectedDate(item); setEditModal(true)}} title="Editar cita">
                             <Button variant="solid" color="primary" icon={<FormOutlined />} shape="circle" size="large" />
@@ -84,6 +84,7 @@ const DateList = () => {
                 open={cancelModal}
                 id={selectedDate.dateId}
                 onCancel={() => setCancelModal(false)}
+                updateList={getDatesList}
             />
 
             <EditDateModal
@@ -91,6 +92,7 @@ const DateList = () => {
                 data={selectedDate}
                 doctorList={doctorList}
                 onCancel={() => setEditModal(false)}
+                uptateList={getDatesList}
             />
         </div>
     )
