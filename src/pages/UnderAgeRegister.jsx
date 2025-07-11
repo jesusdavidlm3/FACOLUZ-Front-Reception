@@ -56,7 +56,6 @@ const UnderAgeRegister = () => {
         setInstructionGrade(null)
         setCompanionPhone(null)
         setEmergencyPhone(null)
-        setCurrentWorking(false)
         setHomeOwnership(null)
         setCurrentStudying(null)
     }
@@ -182,9 +181,6 @@ const UnderAgeRegister = () => {
                     <Form.Item label="Fecha de nacimiento:">
                         <DatePicker onChange={e=>setBirthDate(e)}/>
                     </Form.Item>
-                    <Form.Item label='Numero de hijo'>
-                        <InputNumber controls={false} id='childPositionField'/>
-                    </Form.Item>
                 </Space>
                 <Space>
                     <Form.Item label="Sexo:">
@@ -288,9 +284,6 @@ const UnderAgeRegister = () => {
                             <InputNumber controls={false} id='representativeFamilyBurdenField'/>
                         </Form.Item>
                     </Space>
-                    <Form.Item label='Direccion de trabajo:' layout='vertical'>
-                        <Input.TextArea id='representativeWorkAddressField' style={{width: '50vw'}} autoSize/>
-                    </Form.Item>
                 </> }
                 <Divider>Datos de la cita</Divider>
                 <Space>
