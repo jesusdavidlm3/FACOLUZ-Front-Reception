@@ -179,7 +179,8 @@ const UnderAgeRegister = () => {
                         <Input id='lastnameField'/>
                     </Form.Item>
                     <Form.Item label="Fecha de nacimiento:">
-                        <DatePicker onChange={e=>setBirthDate(e)}/>
+                        
+                        <DatePicker format="DD/MM/YYYY" onChange={e=>setBirthDate(e)}/>
                     </Form.Item>
                 </Space>
                 <Space>
