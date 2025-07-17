@@ -65,7 +65,7 @@ const DateList = () => {
                     <Input.Search onSearch={e => searchById(e)}/>
                 </Form.Item>
             </Form>
-            <List bordered size="small">
+            <List bordered size="small" className="mainList">
                 {showList.map(item => (
                     <List.Item key={item.dateId}>
                     <p>{getDate(item.date, false) + ' - ' + getTime(item.date)} - {('Paciente: ' + item.patientName + ' ' + item.patientLastname)} - {('Doctor: ' + item.doctorName + ' ' + item.doctorLastname)}</p>
