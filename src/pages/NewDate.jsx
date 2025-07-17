@@ -244,6 +244,7 @@ const NewDate = () => {
                         </Form.Item>
                         <Form.Item label="Fecha de nacimiento">
                             <DatePicker
+                                format="DD/MM/YYYY"
                                 style={{width: '150px'}}
                                 onChange={e=>setBirthDate(e)}    
                             />
