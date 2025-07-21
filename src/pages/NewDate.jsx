@@ -219,7 +219,7 @@ const NewDate = () => {
             {contextHolder}
             <Divider>Agendar cita</Divider>
             <Form style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} disabled={loading}>
-                <Space>
+                <Space direction="horizontal" align="start">
                     <Form.Item label="Cedula o codigo de Paciente">
                         <Input.Search onSearch={e => verifyPatient(e)} id="idField"/>
                     </Form.Item>
@@ -334,10 +334,10 @@ const NewDate = () => {
                     <Divider>Datos Socio economicos</Divider>
                     <Space>
                         <Form.Item label="Tipo de vivienda">
-                            <Select options={lists.homeOwnership} onChange={e=>setHomeOwnership(e)}/>
+                            <Select options={lists.homeOwnership} onChange={e=>setHomeOwnership(e)} style={{width: '150px'}}/>
                         </Form.Item>
                         <Form.Item label="Trabaja actualmente:">
-                            <Select options={lists.listOfThree.slice(0,2)} onChange={e=>setCurrentWorking(e)}/>
+                            <Select options={lists.listOfThree.slice(0,2)} onChange={e=>setCurrentWorking(e)} style={{width: '150px'}}/>
                         </Form.Item>
                         { currentWorking == 1 && <>
                             <Form.Item label='Ocupacion:'>
