@@ -1,8 +1,8 @@
 {
-  "name": "facoluz-front-reception",
-  "productName": "FACOLUZ-Front-Reception",
+  "name": "Recepcion FACOLUZ",
+  "productName": "Recepcion FACOLUZ",
   "version": "1.0.0",
-  "description": "FACOLUZ-Front-Reception",
+  "description": "Modulo de recepcion del sistema de gestion de clinicas FACOLUZ",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
