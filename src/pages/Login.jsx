@@ -5,6 +5,8 @@ import { encrypt } from '../functions/hash'
 import { login } from '../client/client'
 import { routerContext } from '../context/routerContext'
 import React from 'react'
+import logofaco from '../assets/Logo_FacoLuz.png'
+import logoluz from '../assets/Logo_LUZ.png'
 
 const Login = () => {
 
@@ -14,7 +16,7 @@ const Login = () => {
 
 	const submitLogin = async () => {
 		setLoading(true)
-		const identification = document.getElementById('identification').value
+		const identification = document.getElementById('id').value
 		const password = document.getElementById('password').value
 
 		const data = {
@@ -40,15 +42,20 @@ const Login = () => {
 		<div className='Login'>
 			{contextHolder}
 			<Form disabled={loading} className='loginForm' onFinish={submitLogin}>
-				<h1>Recepcion</h1>
-				<Form.Item name='identification'>
+				<div className='logos'>
+					<img src={logoluz} className='logoluz'/>
+					<img src={logofaco} className='logofaco'/>
+				</div>
+				<h1>Secretaria Docente</h1>
+				<h2>Iniciar sesion</h2>
+				<Form.Item name='id'>
 					<Input placeholder='Identificacion'/>
 				</Form.Item>
 				<Form.Item name='password'>
 					<Input.Password placeholder='Contraseña'/>
 				</Form.Item>
 
-				<Button htmlType='submit' onClick={submitLogin}>Iniciar Sesion</Button>
+				<Button htmlType='submit'>Iniciar Sesion</Button>
 			</Form>
 		</div>
 	)

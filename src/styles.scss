@@ -186,7 +186,8 @@ body{
 	justify-content: center;
 	width: 100vw;
 	height: 100vh;
-	background-color: white;
+	background-image: url(./assets/fondo.png);
+	background-size: cover;
 
 	.loginForm{
 		display: flex;
@@ -198,10 +199,24 @@ body{
 		border-radius: var(--moduleRadius);
 		padding: var(--modulepPadding);
 		width: 35vw;
-		height: 50vh;
+		height: 55vh;
 
-		h2{margin: 10px;}
-		h1{margin: 10px}
+		h2{margin: 0 10px 10px 10px;}
+		h1{margin: 0 10px 20px 10px}
+
+		.logos{
+			display: flex;
+			align-items: center;
+			gap: 35px;
+
+			img{width: 90px;}
+
+			.logofaco{
+				background-color: white;
+				width: 150px;
+				border-radius: 5px;
+			}
+		}
 	}
 }
 

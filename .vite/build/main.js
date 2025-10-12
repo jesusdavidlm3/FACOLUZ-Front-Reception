@@ -487,8 +487,12 @@ const createWindow = () => {
   {
     mainWindow.loadURL("http://localhost:5173");
   }
-  mainWindow.webContents.openDevTools();
+  mainWindow.maximize();
+  mainWindow.setMenuBarVisibility(false);
 };
+require$$3$1.ipcMain.handle("get_Backend_Address", () => {
+  return process.env.VITE_BACK_ADDRESS;
+});
 require$$3$1.app.whenReady().then(() => {
   createWindow();
   require$$3$1.app.on("activate", () => {
