@@ -26,8 +26,8 @@ const createWindow = () => {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
-  mainWindow.maximize()
-  mainWindow.setMenuBarVisibility(false)
+  mainWindow.maximize();
+  mainWindow.setMenuBarVisibility(false);
 };
 
 ipcMain.handle('get_Backend_Address', () => {

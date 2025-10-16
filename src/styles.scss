@@ -2,7 +2,7 @@
 
 :root{
 	--bgColor: #660099;
-	--moduleColor: #ffffff;
+	--moduleColor: #dadae8;
 	--bgColorLogin: #ffffff;
 	--moduleColorLogin: #660099;
 	--listItemColor: #022C53;
@@ -11,7 +11,7 @@
 }
 
 @mixin pageBasis{
-	background-color: white;
+	background-color: var(--moduleColor);
 	margin: 20px;
 	padding: 20px;
 	width: calc(93vw - 40px);
@@ -71,7 +71,7 @@ body{
 }
 
 .LatPanel{
-	background-color: var(--moduleColor);	
+	background-color: white;	
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -105,7 +105,7 @@ body{
 	}
 
 	&:hover .luzLogo{
-		transform: scale(.6);
+		transform: scale(.3);
 	}
 
 	&:hover .facoLogo{
@@ -140,6 +140,8 @@ body{
 
 		h1{
 			font-size: 20px;
+			position: relative;
+			right: 25%;
 		}
 	}
 	
@@ -220,8 +222,9 @@ body{
 	}
 }
 
-.Home{
+.HomePage{
 	background-image: url(./assets/fondo.png);
+	background-size: cover;
 	// padding: 20px;
 	// height: calc(100% - 40px);
 	// width: calc(100% - 40px);
@@ -231,6 +234,17 @@ body{
 	justify-content: center;
 	text-align: center;
 	@include pageBasis;
+	scrollbar-width: none;
+	color: white;
+	padding: 20px 0;
+	
+	.BackgroundPage{
+		background-color: var(--bgColor);
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 
 	h3{
 		width: 40%;
@@ -240,10 +254,40 @@ body{
 		font-size: 50px;
 		margin: 0px
 	}
+
+	h4{
+		color: black;
+		position: absolute;
+		bottom: 1vh;
+	}
 }
 
 .DateList{
 	@include pageBasis;
+	scrollbar-width: none;
+
+	.mainList{
+		background-color: white;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+
+		.listItem{
+			// background-color: var(--listItemColor);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			align-self: center;
+			// width: 90%;
+			// border-radius: var(--moduleRadius);
+			// padding: 10px 20px;
+
+			.buttons{
+				display: flex;
+				gap: 10px;
+			}
+		}
+	}
 
 	.Buttons{
 		display: flex;
@@ -254,8 +298,10 @@ body{
 
 .NewDate{
 	@include pageBasis;
+	scrollbar-width: none;
 }
 
 .UnderAgeRegister{
 	@include pageBasis;
+	scrollbar-width: none;
 }

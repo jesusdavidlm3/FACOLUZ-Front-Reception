@@ -24,7 +24,7 @@ const LatPanel = () => {
                 <Button className='Button' size={'large'} onClick={()=>{setView('Home')}} variant='solid' icon={<HomeOutlined />}> <p className='invisible'>Inicio</p></Button> 
                 <Button className='Button' size={'large'} onClick={()=>setView('NewDate')} variant='solid' icon={<FileAddOutlined />} ><p className='invisible'>Agendar cita</p></Button>
                 <Button className='Button' size={'large'} onClick={()=>setView('DateList')} variant='solid' icon={<FileDoneOutlined />} ><p className='invisible'>Lista de citas</p></Button>
-                <Button className='Button' size={'large'} onClick={()=>{setConfirmLogout(true)}} variant='solid' icon={<LogoutOutlined />} color='danger'><p className='invisible' color='danger'>Cerrar Sesion</p></Button> 
+                <Button className='Button' size={'large'} onClick={()=>{setConfirmLogout(true)}} variant='solid' icon={<LogoutOutlined />}><p className='invisible' color='danger'>Cerrar Sesion</p></Button> 
             </div>
 
             <img src={Logo_Facoluz} draggable={false} className='facoLogo'/>
