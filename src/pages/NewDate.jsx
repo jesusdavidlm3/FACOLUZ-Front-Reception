@@ -72,9 +72,10 @@ const NewDate = () => {
         }
     }
 
-    const verifyPatient = async(e) => {
-        if(e.length > 0){
-            const res = await verifyPatientExist(e)
+    async function verifyPatient(){
+        const id = document.getElementById("idField").value
+        if(id.length > 0){
+            const res = await verifyPatientExist(id)
             console.log(res)
             if(res.status == 200){
                 setPatientExists(true)
@@ -106,7 +107,7 @@ const NewDate = () => {
             }
 
             const res = await makeDate(data)
-            if(dateRes.status == 200){
+            if(res.status == 200){
                 messageApi.open({
                     type: 'success',
                     content: "Cita registrada"
@@ -191,6 +192,7 @@ const NewDate = () => {
                         cleanState()
                     }else{
                         setLoading(false)
+                        verifyPatient()
                         messageApi.open({
                             type: 'error',
                             content: "error al registrar la cita"
@@ -333,17 +335,17 @@ const NewDate = () => {
                     <Divider>Datos Socio economicos</Divider>
                     <Space>
                         <Form.Item label="Tipo de vivienda">
-                            <Select options={lists.homeOwnership} onChange={e=>setHomeOwnership(e)}/>
+                            <Select style={{width: '150px'}} options={lists.homeOwnership} onChange={e=>setHomeOwnership(e)}/>
                         </Form.Item>
                         <Form.Item label="Trabaja actualmente:">
-                            <Select options={lists.listOfThree.slice(0,2)} onChange={e=>setCurrentWorking(e)}/>
+                            <Select style={{width: '150px'}} options={lists.listOfThree.slice(0,2)} onChange={e=>setCurrentWorking(e)}/>
                         </Form.Item>
                         { currentWorking == 1 && <>
                             <Form.Item label='Ocupacion:'>
-                                <Input id="workTypeField"/>
+                                <Input style={{width: '150px'}} id="workTypeField"/>
                             </Form.Item>
                             <Form.Item label="Carga Famliar">
-                                <InputNumber controls={false} id="familyBurdenField" />
+                                <InputNumber style={{width: '150px'}} controls={false} id="familyBurdenField" />
                             </Form.Item>
                         </> }
                     </Space>

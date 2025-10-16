@@ -46,7 +46,7 @@ const Login = () => {
 					<img src={logoluz} className='logoluz'/>
 					<img src={logofaco} className='logofaco'/>
 				</div>
-				<h1>Secretaria Docente</h1>
+				<h1>Recepcion</h1>
 				<h2>Iniciar sesion</h2>
 				<Form.Item name='id'>
 					<Input placeholder='Identificacion'/>
