@@ -222,7 +222,7 @@ const NewDate = () => {
             <Divider>Agendar cita</Divider>
             <Form style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} disabled={loading}>
                 <Space>
-                    <Form.Item label="Cedula o codigo de Paciente">
+                    <Form.Item label="Cedula o codigo de Paciente" style={{margin: '0'}}>
                         <Input.Search onSearch={e => verifyPatient(e)} id="idField"/>
                     </Form.Item>
                     <Button onClick={()=>setView("UnderAgeRegister")} variant="solid" color="primary">Registrar menor de edad</Button>
@@ -353,7 +353,8 @@ const NewDate = () => {
                 </>)}
                 {(patientExist != null && patientExist == true) && (<>
                     <h3>Nombre: {`${patientData.name} ${patientData.lastname}`}</h3>
-                    <h3>Acompanante habitual: {patientData.companionName}</h3>
+                    <h3>Contacto de emergencia: {patientData.emergencyName} {`(${patientData.emergencyPhone})`}</h3>
+                    {patientData.companionName != null && <h3>Acompanante habitual: {patientData.companionName} {`(${patientData.companionPhone})`}</h3>}
                     <h3>Edad: {getAge(patientData.birthDate)}</h3>
 
                 </>)}
