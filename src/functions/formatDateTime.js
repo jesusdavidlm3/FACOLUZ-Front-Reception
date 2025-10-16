@@ -1,15 +1,23 @@
 export function mergeDateTime(rawDate, rawTime){
     const date = new Date(rawDate)
-    const time = new Date(rawTime)
 
-    const year = date.getFullYear()
-    const month = date.getMonth()+1 <= 9 ? (`0${date.getMonth()+1}`):(date.getMonth()+1)
-    const day = date.getDate() <= 9 ? (`0${date.getDate()}`):(date.getDate())
+    const rawDay = Number(`${rawDate[8]}${rawDate[9]}`)
+    const rawMonth = Number(`${rawDate[5]}${rawDate[6]}`)
+    const year = Number(`${rawDate[0]}${rawDate[1]}${rawDate[2]}${rawDate[3]}`)
 
-    const hour = time.getHours() <= 9 ? (`0${time.getHours()}`):(time.getHours())
-    const minutes = time.getMinutes() <=9 ? (`0${time.getMinutes()}`):(time.getMinutes())
+    console.log(rawMonth, year)
+
+    const rawHours = Number(`${rawTime[0]}${rawTime[1]}`)
+    const rawMinutes = Number(`${rawTime[3]}${rawTime[4]}`)
+
+    const month = rawMonth <= 9 ? (`0${rawMonth}`):(rawMonth)
+    const day = rawDay <= 9 ? (`0${rawDay}`):(rawDay)
+
+    const hour = rawHours <= 9 ? (`0${rawHours}`):(rawHours)
+    const minutes = rawMinutes <=9 ? (`0${rawMinutes}`):(rawMinutes)
 
     const res = `${year}-${month}-${day} ${hour}:${minutes}:00`
+
     return res
 }
 

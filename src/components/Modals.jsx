@@ -4,7 +4,7 @@ import { appContext } from "../context/appContext";
 import React from 'react'
 import { routerContext } from '../context/routerContext'
 import { editDate, cancelDate } from "../client/client";
-import { getDate, getTime, mergeDate, mergeTime } from "../functions/formatDateTime";
+import { getDate, getTime, mergeDate, mergeTime, mergeDateTime } from "../functions/formatDateTime";
 
 export const LogoutModal = ({open, onCancel}) => {
 
@@ -88,21 +88,23 @@ export const EditDateModal = ({open, onCancel, data, doctorList, uptateList}) =>
 
     useEffect(() => {
         if (data) {
-            defaultDateTime()
+            // defaultDateTime()
             setDoctorId(data.doctorId)
         }
     }, [data]);
 
-    const defaultDateTime = () => {
-        const rawDate = getDate(data.date, true)
-        setDate(rawDate)
+    // const defaultDateTime = () => {
+    //     const rawDate = getDate(data.date, true)
+    //     setDate(rawDate)
 
-        const rawTime = getTime(data.date)
-        setTime(rawTime)
-    }
+    //     const rawTime = getTime(data.date)
+    //     setTime(rawTime)
+    // }
+
     const handleChangeDate = (value) => {
         const rawDate = value !== undefined ? mergeDate(value) : date
         setDate(rawDate)
+        console.log(rawDate)
     }
 
     const handleChangeTime = (value) => {
@@ -110,15 +112,13 @@ export const EditDateModal = ({open, onCancel, data, doctorList, uptateList}) =>
         setTime(rawTime)
     }
     
-    const dateData = {
-        id: data.dateId,
-        date: `${date} ${time}:00`,
-        doctorId: doctorId
-    }
-    
-    
     const handlesaveDate = async () => {
         try{
+            const dateData = {
+                id: data.dateId,
+                date: mergeDateTime(date, time),
+                doctorId: doctorId
+            }
             setLoading(true)
             let res = await editDate(dateData)
             if(res.status == 200){
