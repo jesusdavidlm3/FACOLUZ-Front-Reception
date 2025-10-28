@@ -181,6 +181,17 @@ body{
 	}
 }
 
+.Pagination{
+	background-color: var(--moduleColorLogin);
+	border-radius: var(--moduleRadius);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	padding: 0px 10px;
+	color: white;
+}
+
 .Login{
 	display: flex;
 	flex-direction: column;
@@ -264,7 +275,16 @@ body{
 
 .DateList{
 	@include pageBasis;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	align-items: center;
 	scrollbar-width: none;
+
+	form{
+		display: flex;
+		gap: 30px;
+	}
 
 	.mainList{
 		background-color: white;

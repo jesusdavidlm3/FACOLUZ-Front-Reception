@@ -31,8 +31,8 @@ export async function makeDate(data) {
 	return res
 }
 
-export async function getDates() {
-	const res = await http.get('api/getDates', token)
+export async function getDates(page) {
+	const res = await http.get(`api/getDates/${page}`, token)
 	return res
 }
 
@@ -41,8 +41,8 @@ export async function getDatesByPatient(patientId) {
 	return res
 }
 
-export async function getDateByDate(date) {
-	const res = await http.get(`api/getDateByDate/${date}`, token)
+export async function getDateByDate(date, page) {
+	const res = await http.get(`api/getDateByDate/${date}/${page}`, token)
 	return res
 }
 

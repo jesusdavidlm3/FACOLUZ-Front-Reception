@@ -1,23 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { List, Button, Tooltip, Input, DatePicker, Divider, Form } from 'antd'
 import { FormOutlined, StopOutlined } from '@ant-design/icons'
 import { getDates, getDatesByPatient, getDateByDate, getStudentList} from '../client/client'
 import { EditDateModal, ConfirmCancelDate } from '../components/Modals'
 import { mergeDate, getDate, getTime } from "../functions/formatDateTime";
+import Pagination from "../components/Pagination"
+import { appContext } from "../context/appContext";
 
 const DateList = () => {
 
-    const l = []
     const [doctorList, setStudentList] = useState()
     const [selectedDate, setSelectedDate] = useState('')
     const [editModal, setEditModal] = useState(false)
     const [cancelModal, setCancelModal] = useState(false)
-    const [showList, setShowList] = useState(l)
+    const [showList, setShowList] = useState([])
+    const [page, setPage] = useState(1)
+    const {messageApi} = useContext(appContext)
     
     useEffect(() => {
-        getList()
         getDatesList()
+    }, [page])
+
+    useEffect(() => {
+        getList()
     }, [])
+
     const getList = async() => {
             const res = await getStudentList()
             if(res.status == 200){
@@ -31,27 +38,51 @@ const DateList = () => {
         }
 
     async function getDatesList() {
-        const res = await getDates();
-        setShowList(res.data);
+        const res = await getDates(page);
+        if(res.status == 200){
+            setShowList(res.data);
+        }else{
+            messageApi.open({
+                type: "error",
+                content: "error al obtener la lista de citas"
+            })
+        }
     };
 
-    async function searchById(e) {
-        if(e.toString() == ''){
+    async function searchById() {
+        const idInput = document.getElementById("idInput").value
+        if(idInput.toString() == ''){
             getDatesList()
-            return
+        }else{
+            const res = await getDatesByPatient(idInput)
+            if(res.status == 200){
+                setShowList(res.data)
+            }else{
+                messageApi.open({
+                    type: 'error',
+                    content: 'error al obtener la lista de citas'
+                })
+            }
         }
-        const res = await getDatesByPatient(e)
-        setShowList(res.data)
     }
 
-    async function searchByDate(e) {
-        if(e == null){
+    async function searchByDate() {
+        const dateInput = document.getElementById("dateInput").value
+        console.log(dateInput)
+        if(dateInput == null){
             getDatesList()
-            return
+        }else{
+            const date = mergeDate(dateInput)
+            const res = await getDateByDate(date, page)
+            if(res.status == 200){
+                setShowList(res.data)        
+            }else{
+                messageApi.open({
+                    type: 'error',
+                    content: 'error al obtener la lista de citas'
+                })
+            }
         }
-        const date = mergeDate(e)
-        const res = await getDateByDate(date)
-        setShowList(res.data)
     }
 
     return(
@@ -59,10 +90,10 @@ const DateList = () => {
             <Divider>Listado de citas</Divider>
             <Form layout="horizontal" style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}>
                 <Form.Item label="Filtrar por fecha">
-                    <DatePicker selected={selectedDate} onChange={e => searchByDate(e)} dateFormat="YYYY-MM-DD"/>
+                    <DatePicker selected={selectedDate} onChange={() => searchByDate()} id="dateInput" dateFormat="YYYY-MM-DD"/>
                 </Form.Item>
                 <Form.Item label="Filtrar por cedula">
-                    <Input.Search onSearch={e => searchById(e)}/>
+                    <Input.Search onSearch={() => searchById()} id="idInput"/>
                 </Form.Item>
             </Form>
             <List bordered size="small" className="mainList">
@@ -79,6 +110,8 @@ const DateList = () => {
                     </div>
                 </List.Item>))}
             </List>
+
+            <Pagination page={page} setPage={setPage}/>
 
             <ConfirmCancelDate
                 open={cancelModal}
