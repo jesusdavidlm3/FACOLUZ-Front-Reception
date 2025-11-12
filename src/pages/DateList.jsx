@@ -87,7 +87,7 @@ const DateList = () => {
 
     return(
         <div className="DateList">
-            <Divider>Listado de citas</Divider>
+            <Divider className="PageTitle"><h1>Listado de citas</h1></Divider>
             <Form layout="horizontal" style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}>
                 <Form.Item label="Filtrar por fecha">
                     <DatePicker selected={selectedDate} onChange={() => searchByDate()} id="dateInput" dateFormat="YYYY-MM-DD"/>
@@ -96,22 +96,24 @@ const DateList = () => {
                     <Input.Search onSearch={() => searchById()} id="idInput"/>
                 </Form.Item>
             </Form>
-            <List bordered size="small" className="mainList">
-                {showList.map(item => (
-                    <List.Item key={item.dateId}>
-                    <p>{getDate(item.date, false) + ' - ' + getTime(item.date)} - {('Paciente: ' + item.patientName + ' ' + item.patientLastname)} - {('Doctor: ' + item.doctorName + ' ' + item.doctorLastname)}</p>
-                    <div className="Buttons">
-                        <Tooltip onClick={() => {setSelectedDate(item); setEditModal(true)}} title="Editar cita">
-                            <Button variant="solid" color="primary" icon={<FormOutlined />} shape="circle" size="large" />
-                        </Tooltip>
-                        <Tooltip onClick={() => {setSelectedDate(item); setCancelModal(true)}} title="Cancelar cita">
-                            <Button variant="solid" color="danger" icon={<StopOutlined />} shape="circle" size="large" />
-                        </Tooltip>
-                    </div>
-                </List.Item>))}
-            </List>
-
-            <Pagination page={page} setPage={setPage}/>
+            <div className="listContainer Content">
+                <List bordered size="small" className="mainList">
+                    {showList.map(item => (
+                        <List.Item key={item.dateId}>
+                        <p>{getDate(item.date, false) + ' - ' + getTime(item.date)} - {('Paciente: ' + item.patientName + ' ' + item.patientLastname)} - {('Doctor: ' + item.doctorName + ' ' + item.doctorLastname)}</p>
+                        <div className="Buttons">
+                            <Tooltip onClick={() => {setSelectedDate(item); setEditModal(true)}} title="Editar cita">
+                                <Button variant="solid" color="primary" icon={<FormOutlined />} shape="circle" size="large" />
+                            </Tooltip>
+                            <Tooltip onClick={() => {setSelectedDate(item); setCancelModal(true)}} title="Cancelar cita">
+                                <Button variant="solid" color="danger" icon={<StopOutlined />} shape="circle" size="large" />
+                            </Tooltip>
+                        </div>
+                    </List.Item>))}
+                    <Pagination page={page} setPage={setPage}/>
+                </List>
+            </div>
+            <div className="EmptyFooter"/>
 
             <ConfirmCancelDate
                 open={cancelModal}

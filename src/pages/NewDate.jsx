@@ -219,9 +219,9 @@ const NewDate = () => {
     return(
         <div className="NewDate">
             {contextHolder}
-            <Divider>Agendar cita</Divider>
-            <Form style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} disabled={loading}>
-                <Space>
+            <Divider className="PageTitle"><h1>Agendar cita</h1></Divider>
+            <Form style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} disabled={loading} className="Content">
+                <Space className="searchBar">
                     <Form.Item label="Cedula o codigo de Paciente" style={{margin: '0'}}>
                         <Input.Search onSearch={e => verifyPatient(e)} id="idField"/>
                     </Form.Item>
@@ -387,8 +387,8 @@ const NewDate = () => {
 
                     <Button htmlType="submit" variant="solid" color="primary" onClick={saveDate}>Registrar{loading && <LoadingOutlined/>}</Button>
                 </>)}
-
             </Form>
+            <div className="EmptyFooter"/>
         </div>
     )
 }

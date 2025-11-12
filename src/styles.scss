@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 :root{
-	--bgColor: #660099;
+	--bgColor: #f2f7f2;
 	--moduleColor: #dadae8;
-	--bgColorLogin: #ffffff;
-	--moduleColorLogin: #660099;
+	--FACO: #660099;
 	--listItemColor: #022C53;
 	--moduleRadius: 15px;
 	--modulepPadding: 20px;
@@ -13,15 +12,43 @@
 @mixin pageBasis{
 	background-color: var(--moduleColor);
 	margin: 20px;
-	padding: 20px;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
 	width: calc(93vw - 40px);
 	height: calc(100vh - 80px);
 	border-radius: var(--moduleRadius);
 	align-self: center;
 	justify-self: center;
 	align-items: center;
-	overflow-y: scroll;
+	overflow-y: hidden;
 	overflow-x: hidden;
+
+	.PageTitle{
+		background-color: var(--FACO);
+		width: 100%;
+		height: 10%;
+		margin: 0;
+		border-radius: var(--moduleRadius);
+		color: white;
+		box-shadow: 0px 4px 4px rgba(0, 0, 0, .5);
+	}
+
+	.Content{
+		width: 100%;
+		height: 85%;
+		scrollbar-width: none;
+		overflow-y: scroll;
+		padding: 20px 0;
+	}
+
+	.EmptyFooter{
+		background-color: var(--FACO);
+		border-radius: var(--moduleRadius);
+		width: 100%;
+		height: 30px;
+		box-shadow: 0px -3px 4px rgba(0, 0, 0, .5);
+	}	
 }
 
 .Root{
@@ -29,30 +56,6 @@
 	flex-direction: row;
 	align-items: center;
 }
-
-// @mixin BasicPage{
-// 	width: 80vw;
-// 	margin: 10px;
-// 	padding: 30px;
-// 	background-color: var(--moduleColor);
-// 	border-radius: var(--moduleRadius);
-// 	height: calc(100% - 80px);
-// 	display: flex;
-// 	flex-direction: column;
-// 	align-items: center;
-// 	justify-content: start;
-
-// 	.searchBar{
-// 		width: calc(100% - 30px);
-// 		padding: 15px 15px;
-// 		border-radius: var(--moduleRadius);
-// 		display: flex;
-// 		align-items: center;
-// 		justify-content: space-between;
-// 		background-color: var(--hlColor);
-// 		margin-bottom: 20px;
-// 	}
-// }
 
 @mixin basicListItem{
 	padding: 0 15px;
@@ -71,7 +74,7 @@ body{
 }
 
 .LatPanel{
-	background-color: white;	
+	background-color: var(--bgColor);	
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -160,6 +163,22 @@ body{
 	}
 }
 
+.CustomDivider{
+	background-color: black;
+	width: 100%;
+	height: 1px;
+}
+
+.searchBar{
+	border-radius: var(--moduleRadius);
+	padding: var(--modulepPadding);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+	width: 95%;
+}
+
 .ErrorPage{
 	background-color: tomato;
 	width: 100vw;
@@ -182,14 +201,20 @@ body{
 }
 
 .Pagination{
-	background-color: var(--moduleColorLogin);
 	border-radius: var(--moduleRadius);
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: end;
 	gap: 20px;
-	padding: 0px 10px;
-	color: white;
+	padding: 0px 20px 0px 0px;
+	color: black;
+	width: calc(100% - 20px);
+}
+
+.CustomDivider{
+	background-color: black;
+	width: 100%;
+	height: 1px;
 }
 
 .Login{
@@ -207,7 +232,7 @@ body{
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		background-color: var(--bgColor);
+		background-color: var(--FACO);
 		color: white;
 		border-radius: var(--moduleRadius);
 		padding: var(--modulepPadding);
@@ -236,9 +261,6 @@ body{
 .HomePage{
 	background-image: url(./assets/fondo.png);
 	background-size: cover;
-	// padding: 20px;
-	// height: calc(100% - 40px);
-	// width: calc(100% - 40px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -246,11 +268,11 @@ body{
 	text-align: center;
 	@include pageBasis;
 	scrollbar-width: none;
-	color: white;
+	color: black;
 	padding: 20px 0;
 	
 	.BackgroundPage{
-		background-color: var(--bgColor);
+		background-color: rgba(255, 255, 255, .5);
 		width: 100%;
 		display: flex;
 		flex-direction: column;
@@ -286,39 +308,57 @@ body{
 		gap: 30px;
 	}
 
-	.mainList{
-		background-color: white;
-		width: 100%;
+	.listContainer{
+		padding: var(--modulepPadding);
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+		margin: 10px;
+		border-radius: var(--moduleRadius);
+		width: 95%;
+		overflow-y: scroll;
 
-		.listItem{
-			// background-color: var(--listItemColor);
+		.shortList{
+			background-color: white;
+			width: 75%;
 			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			align-self: center;
-			// width: 90%;
-			// border-radius: var(--moduleRadius);
-			// padding: 10px 20px;
+			flex-direction: column;
+			height: 100%;
+		}
 
-			.buttons{
+		.mainList{
+			background-color: white;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			overflow-y: scroll;
+			scrollbar-width: none;
+
+			.listItem{
 				display: flex;
-				gap: 10px;
+				align-items: center;
+				justify-content: space-between;
+				align-self: center;
+				margin: 0;
+				padding: 0 15px 0 15px;
+
+				.buttons{
+					display: flex;
+					gap: 10px;
+				}
 			}
 		}
-	}
-
-	.Buttons{
-		display: flex;
-		align-items: center;
-		gap: 5px;
 	}
 }
 
 .NewDate{
 	@include pageBasis;
 	scrollbar-width: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .UnderAgeRegister{

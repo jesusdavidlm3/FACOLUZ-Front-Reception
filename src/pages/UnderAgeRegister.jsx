@@ -87,14 +87,12 @@ const UnderAgeRegister = () => {
             const representativeName = document.getElementById("representativeNameField").value
             const representativeId = document.getElementById("representativeIdField").value 
             let representativeWorkType = representativeWorking == 1 ? document.getElementById("representativeWorkTypeField").value : null
-            //let representativeWorkAddress = representativeWorking == 1 ? document.getElementById("representativeWorkAddressField").value : null
             const representativeFamilyBurden = representativeWorking == 1 ?document.getElementById("representativeFamilyBurdenField").value : 0
 
             const historyData = {
                 name: name,
                 lastname: lastname,
                 birthDate: birthDate != undefined ? (birthDate.$d):(null),
-                //childPosition: childPosition,
                 sex: sex,
                 race: race,
                 ethnicity: ethnicity,
@@ -117,7 +115,6 @@ const UnderAgeRegister = () => {
                 representativePhone: representativePhone,
                 representativeWorking: representativeWorking,
                 representativeWorkType: representativeWorkType,
-                //representativeWorkAddress: representativeWorkAddress,
                 representativeWorkPhone: representativeWorkPhone,
                 representativeFamilyBurden: representativeFamilyBurden,
                 homeOwnership: homeOwnership,
@@ -168,9 +165,9 @@ const UnderAgeRegister = () => {
     return(
         <div className="UnderAgeRegister">
             {contextHolder}
-            <Title level={2} style={{textAlign: 'center'}}>Registro de pacientes menores de edad</Title>
-            <Divider></Divider>
-            <Form style={{display: 'Flex', alignItems: 'center', flexDirection: 'column'}}>
+            {/* <Title level={2} style={{textAlign: 'center'}}>Registro de pacientes menores de edad</Title> */}
+            <Divider className='PageTitle'><h1>Registro de pacientes menores de edad</h1></Divider>
+            <Form className='Content' style={{display: 'Flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Space>
                     <Form.Item label="Nombre:">
                         <Input id='nameField'/>
@@ -308,6 +305,7 @@ const UnderAgeRegister = () => {
 
                 <Button variant='solid' color='primary' htmlType='submit' onClick={send}>Agendar cita</Button>
             </Form>
+            <div className='EmptyFooter'/>
         </div>
     )
 }
